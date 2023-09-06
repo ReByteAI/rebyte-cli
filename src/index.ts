@@ -1,6 +1,7 @@
 import { cac } from "https://unpkg.com/cac@6.7.14/mod.ts"
 import { login } from './config.ts'
 import { newRebyteJson, deploy } from './rebyte.ts'
+import { version } from './version.ts'
 
 const cli = cac('rebyte')
 
@@ -17,6 +18,7 @@ cli.command('deploy <dir>', 'deploy your main file to rebyte')
     await deploy(dir, rebyte)
   })
 
+cli.version(version)
 cli.help()
 cli.parse()
 

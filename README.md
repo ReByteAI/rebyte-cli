@@ -7,27 +7,27 @@ You may install rebyte using the following scripts.
 Using PowerShell:
 
 ```iwr
-iwr https://get.pnpm.io/install.ps1 -useb | iex
+iwr https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh -useb | iex
 ```
 
 ## On POSIX systems
 ```sh
-curl -fsSL https://get.pnpm.io/install.sh | sh -
+curl -fsSL https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | sh -
 ```
 
 If you don't have curl installed, you would like to use wget:
 
 ```sh
-wget -qO- https://get.pnpm.io/install.sh | sh -
+wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | sh -
 ```
 
 <!-- On Alpine Linux
 # bash
-wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
+wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
 # sh
-wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
+wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 # dash
-wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.dashrc" SHELL="$(which dash)" dash - -->
+wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.dashrc" SHELL="$(which dash)" dash - -->
 
 
 # Using rebyte

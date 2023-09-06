@@ -91,7 +91,7 @@ detect_arch() {
 }
 
 latest_version() {
-  printf "v0.0.1"
+  printf "v0.0.2"
 }
 
 download_and_install() {

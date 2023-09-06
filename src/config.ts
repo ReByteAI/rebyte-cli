@@ -36,7 +36,7 @@ class RebyteConfig {
     await Deno.writeTextFile(filePath, JSON.stringify(this, null, 2), { create: true });
   }
 }
-const config = new RebyteConfig()
+export const config = new RebyteConfig()
 await config.restore()
 
 export async function login(key: string) {

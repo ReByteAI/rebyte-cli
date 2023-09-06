@@ -26,13 +26,14 @@ export async function newRebyteJson(dir: string): Promise<RebyteJson> {
 export async function deploy(dir: string, rebyte: RebyteJson) {
   Deno.chdir(dir)
   const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts")
-  const outPut = path.join(Deno.cwd(), rebyte.out ?? "./dist/" + rebyte.name + ".js")
+  const output = path.join(Deno.cwd(), rebyte.out ?? "./dist/" + rebyte.name + ".js")
   await esbuild.build({
-    plugins: [...denoPlugins({ loader: "native", nodeModulesDir: true })],
+    plugins: [...denoPlugins({ loader: "portable", nodeModulesDir: true })],
     entryPoints: [entryPoint],
-    outfile: outPut,
+    outfile: output,
     bundle: true,
     format: "esm",
+    write: true,
   });
   esbuild.stop();
 }

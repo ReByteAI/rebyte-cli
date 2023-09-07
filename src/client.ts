@@ -8,8 +8,28 @@ export class RebyteAPI {
 
   constructor(key: string) {
     this.key = key
-    this.base = "https://rebyte.ai/api/sdk"
-    // this.base = "http://localhost:3000/api/sdk"
+    // this.base = "https://rebyte.ai/api/sdk"
+    this.base = "http://localhost:3000/api/sdk"
+  }
+
+  async ping(): Promise<boolean> {
+    const response = await fetch(this.base + "/block/ping", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${this.key}`,
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+    });
+
+    if (response.status === 401) {
+      return false
+    }
+    if (response.ok) {
+      return true
+    } else {
+      throw Error(`Failed to ping with server ${await response.text()} `)
+    }
   }
 
   async getUploadURL(fileName: string): Promise<string> {

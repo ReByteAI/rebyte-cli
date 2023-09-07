@@ -4,7 +4,6 @@ import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.1/mod.t
 import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
 import { RebyteAPI } from "./client.ts"
 import { config } from "./config.ts"
-import { green } from "./log.ts"
 
 const REBYTE_JSON_FILE = "rebyte.json"
 
@@ -33,7 +32,7 @@ function getUploadFileName(rebyte: RebyteJson): string {
  
 export async function deploy(dir: string, rebyte: RebyteJson) {
   if (!config.api_key) {
-    throw Error("No login, please login")
+    throw Error("Please login first")
   }
   // check name is available
   const client = new RebyteAPI(config.api_key)
@@ -57,5 +56,5 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const uploadURL = await client.getUploadURL(fileId)
   await client.uploadFile(uploadURL, output)
   await client.createJsBlock(rebyte, fileId)
-  green("Deploy jsblock success")
+  console.log("Deploy jsblock success")
 }

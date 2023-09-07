@@ -9,7 +9,12 @@ cli.command('login', 'Login rebyte use your api key')
   .option('-k, --api-key <api-key>', "Your rebyte api key")
   .action(async (options) => {
     const key = options.apiKey
-    await login(key)
+    const success = await login(key)
+    if (success) {
+      console.log("Login successfully")
+    } else {
+      console.log("Login failed, api key is invalidate")
+    }
   })
 
 cli.command('deploy <dir>', 'deploy your main file to rebyte')

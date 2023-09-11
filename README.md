@@ -33,8 +33,11 @@ wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh 
 # Using rebyte
 
 ## Login through rebyte api
-1. generate rebyte api from https://rebyte.ai
-2. login using your api
+#### 1. generate rebyte api from https://rebyte.ai
+
+  ![img](./imgs/create-key.png)
+
+#### 2. login using your api
 ```
 rebyte login -k <your rebyte api key>
 ```

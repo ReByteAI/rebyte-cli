@@ -30,6 +30,7 @@ class RebyteConfig {
       if (cachedConfig && cachedConfig.api_key) {
         this.api_key = cachedConfig.api_key
       }
+      this.servers = cachedConfig.servers
     } catch (_) {
       // ignore
     }

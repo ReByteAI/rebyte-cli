@@ -15,6 +15,7 @@ const RebyteJson = z.object({
   version: z.string(),
   main: z.string().optional().nullable(),
   out: z.string().optional().nullable(),
+  inputArgs: z.array(z.string()).optional(),
 });
 
 export type RebyteJson = z.infer<typeof RebyteJson>;

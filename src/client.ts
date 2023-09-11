@@ -73,7 +73,7 @@ export class RebyteAPI {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name: rebyte.name }),
+      body: JSON.stringify({ name: rebyte.name, version: rebyte.version }),
     });
   
     if (response.ok) {

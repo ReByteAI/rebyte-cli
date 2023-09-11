@@ -3,12 +3,12 @@
 # Using a standalone script
 You may install rebyte using the following scripts.
 
-## On Windows
+<!-- ## On Windows
 Using PowerShell:
 
 ```iwr
 iwr https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh -useb | iex
-```
+``` -->
 
 ## On POSIX systems
 ```sh

@@ -10,7 +10,7 @@ jobs:
     name: Upload Release Asset
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - name: Checkout code
@@ -18,6 +18,8 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.36.x # Run with latest stable Deno.
+      - name: Update Versio File
+        run: ./.github/scripts/update_version_file.sh ${{ github.ref_name }}
       - name: Build project
         run: ./build.sh
       - name: Release

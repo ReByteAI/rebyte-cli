@@ -7,9 +7,13 @@ const cli = cac('rebyte')
 
 cli.command('login', 'Login rebyte use your api key')
   .option('-k, --api-key <api-key>', "Your rebyte api key")
+  .option('-u, --url <server-url>', "Your rebyte server url, default is: https://rebyte.ai", {
+    default: "https://rebyte.ai"
+  })
   .action(async (options) => {
     const key = options.apiKey
-    const success = await login(key)
+    const url = options.url
+    const success = await login(key, url)
     if (success) {
       console.log("Login successfully")
     } else {

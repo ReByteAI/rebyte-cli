@@ -1,15 +1,15 @@
 import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/mod.ts";
 import { RebyteJson } from "./rebyte.ts";
+import { RebyteServer } from "./config.ts";
 
 export class RebyteAPI {
   
   key: string
   base: string
 
-  constructor(key: string) {
-    this.key = key
-    this.base = "https://rebyte.ai/api/sdk"
-    // this.base = "http://localhost:3000/api/sdk"
+  constructor(server: RebyteServer) {
+    this.key = server.api_key
+    this.base = server.url + "/api/sdk"
   }
 
   async ping(): Promise<boolean> {

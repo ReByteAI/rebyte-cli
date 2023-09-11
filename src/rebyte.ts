@@ -31,11 +31,12 @@ function getUploadFileName(rebyte: RebyteJson): string {
 }
  
 export async function deploy(dir: string, rebyte: RebyteJson) {
-  if (!config.api_key) {
+  const activeServer = config.activeServer()
+  if (!activeServer) {
     throw Error("Please login first")
   }
   // check name is available
-  const client = new RebyteAPI(config.api_key)
+  const client = new RebyteAPI(activeServer)
   await client.checkJsBlockName(rebyte)
 
   Deno.chdir(dir)

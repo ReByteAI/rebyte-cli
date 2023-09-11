@@ -3,10 +3,16 @@ import { RebyteAPI } from "./client.ts";
 
 const CONFIG_FILE_NAME = "config.json"
 
+export type RebyteServer = {
+  url: string,
+  api_key: string
+}
+
 class RebyteConfig {
   
   config_dir: string
   api_key?: string
+  servers: RebyteServer[]
 
   constructor() {
     const home = homedir()
@@ -14,7 +20,9 @@ class RebyteConfig {
       throw Error("Can't find home dir")
     }
     this.config_dir = home + "/.rebyte"
+    this.servers = []
   }
+
   async restore() {
     const filePath = this.config_dir + "/" + CONFIG_FILE_NAME;
     try {
@@ -25,6 +33,13 @@ class RebyteConfig {
     } catch (_) {
       // ignore
     }
+  }
+
+  activeServer(): RebyteServer | undefined {
+    if (!this.api_key) {
+      return
+    }
+    return this.servers.find(s => s.api_key === this.api_key)
   }
 
   async save() {
@@ -40,13 +55,14 @@ class RebyteConfig {
 export const config = new RebyteConfig()
 await config.restore()
 
-export async function login(key: string): Promise<boolean> {
-  const client = new RebyteAPI(key)
+export async function login(api_key: string, url: string): Promise<boolean> {
+  const client = new RebyteAPI({api_key, url})
   const logged = await client.ping()
   if (!logged) {
     return false
   }
-  config.api_key = key  
+  config.api_key = api_key
+  config.servers.push({ api_key, url })
   await config.save()
   return true
 }

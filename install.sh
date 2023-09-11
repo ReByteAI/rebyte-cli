@@ -112,7 +112,7 @@ download_and_install() {
   tmp_dir="$(mktemp -d)" || abort "Tmpdir Error!"
   trap 'rm -rf "$tmp_dir"' EXIT INT TERM HUP
 
-  ohai "Downloading rebyte binaries ${version}"
+  ohai "Downloading rebyte binaries ${version} to /usr/local/bin/"
   # download the binary to the specified directory
   download "$archive_url" > "$tmp_dir/rebyte"  || return 1
   chmod +x "$tmp_dir/rebyte"

@@ -21,6 +21,7 @@ If you don't have curl installed, you would like to use wget:
 wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | sh -
 ```
 
+
 <!-- On Alpine Linux
 # bash
 wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
@@ -29,6 +30,7 @@ wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh 
 # dash
 wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.dashrc" SHELL="$(which dash)" dash - -->
 
+> **⚠️ Note:** Scripts will download rebyte binray to `/usr/local/bin` directory. Make sure the `/usr/local/bin` directory exists and in your `PATH` environment variable
 
 # Using rebyte
 

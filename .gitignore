@@ -129,4 +129,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-rebyte-macos-x64
+rebyte-macos*
+rebyte-linux*

@@ -8,8 +8,8 @@ export class RebyteAPI {
 
   constructor(key: string) {
     this.key = key
-    // this.base = "https://rebyte.ai/api/sdk"
-    this.base = "http://localhost:3000/api/sdk"
+    this.base = "https://rebyte.ai/api/sdk"
+    // this.base = "http://localhost:3000/api/sdk"
   }
 
   async ping(): Promise<boolean> {

@@ -28,5 +28,5 @@ cli.command('deploy <dir>', 'deploy your main file to rebyte')
   })
 
 cli.version(version)
-cli.help()
 cli.parse()
+cli.outputHelp()

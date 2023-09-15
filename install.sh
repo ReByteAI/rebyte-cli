@@ -95,10 +95,7 @@ download_and_install() {
   platform="$(detect_platform)"
   arch="$(detect_arch)" || abort "Sorry! rebyte currently only provides pre-built binaries for x86_64/arm64 architectures."
 
-  version_url="https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/src/version.ts"
-  version="$(download "$version_url")"
-  version=${version#export const version = }
-  version=$(echo "$version" | tr -d \")
+  version="$(curl --silent "https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
   ohai "The latest version is $version"
 
   archive_url="https://github.com/g1g2-lab/rebyte-cli/releases/download/${version}/rebyte-${platform}-${arch}"

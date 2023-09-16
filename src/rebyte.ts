@@ -23,6 +23,7 @@ const RebyteJson = z.object({
     description: z.string(),
     type: z.string(),
     required: z.boolean().optional(),
+    config: z.boolean().optional(),
   })).optional(),
 });
 

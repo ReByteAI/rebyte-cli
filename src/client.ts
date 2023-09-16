@@ -1,15 +1,18 @@
 import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/mod.ts";
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
+import { AppRouter } from "./trpc-router.ts";
+import { createTRPCClient } from "../deps.ts";
+
+var env = Deno.env.toObject();
 
 export class RebyteAPI {
-  
-  key: string
-  base: string
+  key: string;
+  base: string;
 
   constructor(server: RebyteServer) {
-    this.key = server.api_key
-    this.base = server.url + "/api/sdk"
+    this.key = server.api_key;
+    this.base = server.url + "/api/sdk";
   }
 
   async ping(): Promise<boolean> {
@@ -18,17 +21,17 @@ export class RebyteAPI {
       headers: {
         "Authorization": `Bearer ${this.key}`,
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
     });
 
     if (response.status === 401) {
-      return false
+      return false;
     }
     if (response.ok) {
-      return true
+      return true;
     } else {
-      throw Error(`Failed to ping with server ${await response.text()} `)
+      throw Error(`Failed to ping with server ${await response.text()} `);
     }
   }
 
@@ -38,16 +41,16 @@ export class RebyteAPI {
       headers: {
         "Authorization": `Bearer ${this.key}`,
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ fileName }),
     });
-  
+
     if (response.ok) {
       const data = await response.json();
       return data.url;
     } else {
-      throw Error(`Failed to get upload url: `)
+      throw Error(`Failed to get upload url: `);
     }
   }
 
@@ -57,7 +60,7 @@ export class RebyteAPI {
       method: "PUT",
       body: readableStreamFromReader(f),
       headers: {
-        "Content-Type": "text/javascript", 
+        "Content-Type": "text/javascript",
       },
     });
     if (!response.ok) {
@@ -71,16 +74,16 @@ export class RebyteAPI {
       headers: {
         "Authorization": `Bearer ${this.key}`,
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ name: rebyte.name, version: rebyte.version }),
     });
-  
+
     if (response.ok) {
       const data = await response.json();
-      console.log(data.message)
+      console.log(data.message);
     } else {
-      throw Error(`Failed to check name ${await response.text()} `)
+      throw Error(`Failed to check name ${await response.text()} `);
     }
   }
 
@@ -90,13 +93,22 @@ export class RebyteAPI {
       headers: {
         "Authorization": `Bearer ${this.key}`,
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ ...rebyte, fileId }),
     });
-  
+
     if (!response.ok) {
-      throw Error(`Failed to create jsblock err: ${await response.text()} `)
+      throw Error(`Failed to create jsblock err: ${await response.text()} `);
     }
   }
 }
+
+// const client = createTRPCClient<AppRouter>({ url: 'http://localhost:5005/trpc' });
+//
+// try {
+//   const query = await client.query("hw");
+//   console.log(JSON.stringify(query));
+// } catch (e) {
+//   console.error(e);
+// }

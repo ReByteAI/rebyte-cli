@@ -23,7 +23,6 @@ const RebyteJson = z.object({
     description: z.string(),
     type: z.string(),
     required: z.boolean().optional(),
-    config: z.boolean().optional(),
   })).optional(),
 });
 
@@ -66,9 +65,9 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   esbuild.stop();
 
   // get upload url
-  // const fileId = getUploadFileName(rebyte)
-  // const uploadURL = await client.getUploadURL(fileId)
-  // await client.uploadFile(uploadURL, output)
-  // await client.createJsBlock(rebyte, fileId)
+  const fileId = getUploadFileName(rebyte)
+  const uploadURL = await client.getUploadURL(fileId)
+  await client.uploadFile(uploadURL, output)
+  await client.createJsBlock(rebyte, fileId)
   console.log("Deploy ReByte Customized Block success");
 }

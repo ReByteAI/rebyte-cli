@@ -99,7 +99,7 @@ export class RebyteAPI {
     });
 
     if (!response.ok) {
-      throw Error(`Failed to create jsblock err: ${await response.text()} `);
+      throw Error(`Failed to create JsBundle err: ${await response.text()} `);
     }
   }
 }

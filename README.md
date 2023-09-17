@@ -8,28 +8,28 @@ You may install rebyte using the following scripts.
 Using PowerShell:
 
 ```iwr
-iwr https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh -useb | iex
+iwr https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh -useb | iex
 ``` -->
 
 ## On POSIX systems
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | sh -
+curl -fsSL https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sh -
 ```
 
 If you don't have curl installed, you would like to use wget:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | sh -
+wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sh -
 ```
 
 <!-- On Alpine Linux
 # bash
-wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
+wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | ENV="$HOME/.bashrc" SHELL="$(which bash)" bash -
 # sh
-wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
+wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 # dash
-wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh | ENV="$HOME/.dashrc" SHELL="$(which dash)" dash - -->
+wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | ENV="$HOME/.dashrc" SHELL="$(which dash)" dash - -->
 
 > **⚠️ Note:** Scripts will download rebyte binray to `/usr/local/bin` directory.
 > Make sure the `/usr/local/bin` directory exists and in your `PATH` environment
@@ -39,7 +39,7 @@ wget -qO- https://raw.githubusercontent.com/g1g2-lab/rebyte-cli/main/install.sh 
 
 ## Login through rebyte api
 
-#### 1. generate rebyte api from https://rebyte.ai
+#### 1. generate rebyte api KEY from https://rebyte.ai
 
 ![img](./imgs/create-key.png)
 

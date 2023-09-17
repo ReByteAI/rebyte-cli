@@ -46,7 +46,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   }
   // check name is available
   const client = new RebyteAPI(activeServer);
-  await client.checkJsBlockName(rebyte);
+  // await client.checkJsBlockName(rebyte);
 
   Deno.chdir(dir);
   const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");

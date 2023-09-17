@@ -99,3 +99,12 @@ export async function list_callable() {
   }
   logSuccess("List callable success");
 }
+
+export async function import_dir(dir: string, rebyte: RebyteJson) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  logSuccess("List callable success");
+}
+

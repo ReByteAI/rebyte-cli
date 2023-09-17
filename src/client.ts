@@ -119,6 +119,7 @@ export class RebyteAPI {
     }
   }
 
+  //
   async upsertDoc(): Promise<string> {
     // const response = await fetch(this.base + `/p/${}/knowledge/${}/d/${docid}`, {
     //   method: "POST",

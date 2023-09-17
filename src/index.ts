@@ -1,7 +1,7 @@
 import { cac } from "https://unpkg.com/cac@6.7.14/mod.ts";
 import { login } from "./config.ts";
 import {
-  deploy,
+  deploy, import_dir,
   list_callable,
   list_jsbundle,
   newRebyteJson,
@@ -52,6 +52,12 @@ cli.command("deploy <dir>", "deploy your main file to rebyte")
     const rebyte = await newRebyteJson(dir);
     await deploy(dir, rebyte);
   });
+
+cli.command("import <dir>", "import dir to knowledges")
+    .action(async (dir) => {
+      const rebyte = await newRebyteJson(dir);
+      await import_dir(dir, rebyte);
+    });
 
 cli.outputHelp();
 cli.parse();

@@ -5,7 +5,13 @@ import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
 import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
 
+import { chalk} from "../deps.ts";
+
 const REBYTE_JSON_FILE = "rebyte.json";
+
+function logSuccess(msg: string) {
+  console.log(chalk.green(msg));
+}
 
 const RebyteJson = z.object({
   name: z.string().min(5).max(30).refine(
@@ -65,9 +71,31 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   esbuild.stop();
 
   // get upload url
-  const fileId = getUploadFileName(rebyte)
-  const uploadURL = await client.getUploadURL(fileId)
-  await client.uploadFile(uploadURL, output)
-  await client.createJsBlock(rebyte, fileId)
+  const fileId = getUploadFileName(rebyte);
+  const uploadURL = await client.getUploadURL(fileId);
+  await client.uploadFile(uploadURL, output);
+  await client.createJsBlock(rebyte, fileId);
   console.log("Deploy ReByte Customized Block success");
+}
+
+export async function list_jsbundle() {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+
+  const jsBundles = await client.getJsBundles();
+
+  console.log("jsBundles", jsBundles);
+
+  logSuccess("List jsbundle success 🎉");
+}
+
+export async function list_callable() {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  logSuccess("List callable success");
 }

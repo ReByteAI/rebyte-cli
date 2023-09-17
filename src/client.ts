@@ -1,8 +1,6 @@
 import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/mod.ts";
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
-import { AppRouter } from "./trpc-router.ts";
-import { createTRPCClient } from "../deps.ts";
 
 var env = Deno.env.toObject();
 
@@ -102,13 +100,41 @@ export class RebyteAPI {
       throw Error(`Failed to create JsBundle err: ${await response.text()} `);
     }
   }
-}
 
-// const client = createTRPCClient<AppRouter>({ url: 'http://localhost:5005/trpc' });
-//
-// try {
-//   const query = await client.query("hw");
-//   console.log(JSON.stringify(query));
-// } catch (e) {
-//   console.error(e);
-// }
+  async getJsBundles(): Promise<string> {
+    const response = await fetch(this.base + "/block", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${this.key}`,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data
+    } else {
+      throw Error(`Failed to get js bundles: `);
+    }
+  }
+
+  async upsertDoc(): Promise<string> {
+    // const response = await fetch(this.base + `/p/${}/knowledge/${}/d/${docid}`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Authorization": `Bearer ${this.key}`,
+    //     "Accept": "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    //
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   return data
+    // } else {
+    //   throw Error(`Failed to get js bundles: `);
+    // }
+    return ""
+  }
+}

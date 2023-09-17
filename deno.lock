@@ -207,6 +207,13 @@
     "https://deno.land/std@0.201.0/streams/write_all.ts": "aec90152978581ea62d56bb53a5cbf487e6a89c902f87c5969681ffbdf32b998",
     "https://deno.land/std@0.201.0/streams/writer_from_stream_writer.ts": "07c7ee025151a190f37fc42cbb01ff93afc949119ebddc6e0d0df14df1bf6950",
     "https://deno.land/std@0.201.0/streams/zip_readable_streams.ts": "5639c8fea8c21d7dab6f34edcf3d08218b7e548a197f7fd79a3a995305a81e9f",
+    "https://deno.land/std@0.94.0/node/tty.ts": "9fa7f7b461759774b4eeab00334ac5d25b69bf0de003c02814be01e65150da79",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/ansi-styles/index.js": "7cc96ab93d1c9cfc0746e9dffb40be872e42ee242906f48e68df0d2c9669f737",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/has-flag/index.js": "aed21e4eba656057e7b8c6024305f5354d2ebee2adc857a1d8cd5207923de7e5",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js": "6339123f32f7eb4b17c5c9c926ecdf3dbc353fd4fda7811ad2d3c1d4b98a7420",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/supports-color/index.js": "4d7f2d216b6ac9013d9ec7e004de21f5a7d00bf2be4075bab2d82638d0d41a86",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/templates.js": "f2e12be18cb84710e341e5499528280278052909fa74a12cefc9e2cc26a597ac",
+    "https://deno.land/x/chalk_deno@v4.1.1-deno/source/util.js": "cd08297ec411dcee91826ad01a00d3427235d4548ba605a59e64f0da83af8306",
     "https://deno.land/x/deno_cache@0.4.1/auth_tokens.ts": "5fee7e9155e78cedf3f6ff3efacffdb76ac1a76c86978658d9066d4fb0f7326e",
     "https://deno.land/x/deno_cache@0.4.1/cache.ts": "51f72f4299411193d780faac8c09d4e8cbee951f541121ef75fcc0e94e64c195",
     "https://deno.land/x/deno_cache@0.4.1/deno_dir.ts": "f2a9044ce8c7fe1109004cda6be96bf98b08f478ce77e7a07f866eff1bdd933f",
@@ -270,5 +277,23 @@
     "https://unpkg.com/cac@6.7.14/deno/index.ts": "c716f480bbb2fc178bffb25caa027785c10ee161450ede8bf2a1c8ec597576d6",
     "https://unpkg.com/cac@6.7.14/deno/utils.ts": "e6426b2706edd6a07c287499b6ca68a2895cc48dc47a2eb602676c2a6cd05ecb",
     "https://unpkg.com/cac@6.7.14/mod.ts": "5e642f7e9d9753f5057c549cda3a37a1c1f5f47dcd1bd2e4ee0ab919bb31db99"
+  },
+  "npm": {
+    "specifiers": {
+      "@trpc/client": "@trpc/client@10.38.3_@trpc+server@10.38.3",
+      "@trpc/server": "@trpc/server@10.38.3"
+    },
+    "packages": {
+      "@trpc/client@10.38.3_@trpc+server@10.38.3": {
+        "integrity": "sha512-hHPsElTL4sB+UGzuAZ4iwRVHjELrk/Nsl2owsYw9ITJz3EY7VWRsQ6vK48kJvlHPYPhP+efID5UOgyZMs4bFXA==",
+        "dependencies": {
+          "@trpc/server": "@trpc/server@10.38.3"
+        }
+      },
+      "@trpc/server@10.38.3": {
+        "integrity": "sha512-9s8/kwo2IDB5hwB2SKZZrfevRhdb1f9fdXtIYd3lbQuf2jQaC/LyQuHaIQjDQoUx9updBfsHXcFFPiCP1DL6pg==",
+        "dependencies": {}
+      }
+    }
   }
 }

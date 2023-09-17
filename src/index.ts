@@ -1,6 +1,11 @@
 import { cac } from "https://unpkg.com/cac@6.7.14/mod.ts";
 import { login } from "./config.ts";
-import { deploy, newRebyteJson } from "./rebyte.ts";
+import {
+  deploy,
+  list_callable,
+  list_jsbundle,
+  newRebyteJson,
+} from "./rebyte.ts";
 import { version } from "./version.ts";
 
 const cli = cac("rebyte");
@@ -19,10 +24,27 @@ cli.command("login", "Login rebyte use your api key")
     const url = options.url;
     const success = await login(key, url);
     if (success) {
-      console.log("Login successfully");
+      console.log("Login successfully 🎉");
     } else {
       console.log("Login failed, api key is invalidate");
     }
+  });
+
+cli.command("logout", "Logout current project")
+  .action(async () => {
+    console.log("list callable");
+  });
+
+cli.command("list-callable", "List all callable belong to you")
+  .action(async () => {
+    console.log("list callable");
+    await list_callable();
+  });
+
+cli.command("list-jsbundle", "List all jsbundle belong to project")
+  .action(async () => {
+    console.log("list jsbundle");
+    await list_jsbundle();
   });
 
 cli.command("deploy <dir>", "deploy your main file to rebyte")
@@ -31,6 +53,5 @@ cli.command("deploy <dir>", "deploy your main file to rebyte")
     await deploy(dir, rebyte);
   });
 
-cli.version(version);
-cli.parse();
 cli.outputHelp();
+cli.parse();

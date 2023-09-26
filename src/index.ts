@@ -59,5 +59,6 @@ cli.command("import <dir>", "import dir to knowledges")
       await import_dir(dir, rebyte);
     });
 
+cli.version(version)
 cli.outputHelp();
 cli.parse();

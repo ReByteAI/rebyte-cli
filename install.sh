@@ -98,7 +98,7 @@ download_and_install() {
   version="$(curl --silent "https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
   ohai "The latest version is $version"
 
-  archive_url="https://github.com/g1g2-lab/rebyte-cli/releases/download/${version}/rebyte-${platform}-${arch}"
+  archive_url="https://github.com/ReByteAI/rebyte-cli/releases/download/${version}/rebyte-${platform}-${arch}"
   if [ "${platform}" = "win" ]; then
     archive_url="${archive_url}.exe"
   fi

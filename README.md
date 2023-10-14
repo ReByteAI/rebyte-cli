@@ -1,8 +1,14 @@
 # rebyte-cli
 
-# Using a standalone script
+# Introduction
+Rebyte-cli is a command line tool for **rebyte.ai**. It can help you to manage your rebyte project via command line. 
+* Manage your agent
+* Manage your agent extension
+* Manage your knowledge base
 
-You may install rebyte using the following scripts.
+# Install
+
+You may install rebyte cli using the following scripts.
 
 <!-- ## On Windows
 Using PowerShell:
@@ -11,16 +17,16 @@ Using PowerShell:
 iwr https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh -useb | iex
 ``` -->
 
-## On POSIX systems
+### On POSIX systems
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sh -
+curl -fsSL https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -
 ```
 
 If you don't have curl installed, you would like to use wget:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sh -
+wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -
 ```
 
 <!-- On Alpine Linux
@@ -35,7 +41,7 @@ wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh 
 > Make sure the `/usr/local/bin` directory exists and in your `PATH` environment
 > variable
 
-# Using rebyte
+# Using rebyte CLI to create action extension
 
 ## Login through rebyte api
 
@@ -49,7 +55,16 @@ wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh 
 rebyte login -k <your rebyte api key>
 ```
 
-## Deploy your project
+> For cn user, you can use `rebyte login -k <your rebyte api key> -u https://colingo.ai`
+
+## Create Extension
+
+You need to go to UI to create an extension first.
+
+http://rebyte.ai/p/<Your_Project_Id>/settings/extensions
+
+
+## Deploy Extension
 
 Using `rebyte deploy` to deploy your project. Your project dir must have a
 `rebyte.json` file

@@ -113,7 +113,7 @@ download_and_install() {
   # download the binary to the specified directory
   download "$archive_url" > "$tmp_dir/rebyte"  || return 1
   chmod +x "$tmp_dir/rebyte"
-  cp "$tmp_dir/rebyte" "/usr/local/bin/rebyte"
+  cp "$tmp_dir/rebyte" "/usr/local/bin/rebyte" || return 1
   ohai "Rebyte binary was downloaded to /usr/local/bin/rebyte"
   # SHELL="$SHELL" "$tmp_dir/rebyte" setup --force || return 1
 }

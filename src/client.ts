@@ -9,11 +9,13 @@ var env = Deno.env.toObject();
 export class RebyteAPI {
   key: string;
   base: string;
-  trpc: any
+  trpc: any;
+  pId: string
 
   constructor(server: RebyteServer) {
     this.key = server.api_key;
     this.base = server.url + "/api/sdk";
+    this.pId = server.pId
 
     const client = createTRPCProxyClient<AppRouter>({
       links: [
@@ -31,7 +33,7 @@ export class RebyteAPI {
     this.trpc = client
   }
 
-  async ping(): Promise<boolean> {
+  async ping(): Promise<string | null> {
     const response = await fetch(this.base + "/ext/ping", {
       method: "GET",
       headers: {
@@ -42,10 +44,11 @@ export class RebyteAPI {
     });
 
     if (response.status === 401) {
-      return false;
+      return null;
     }
     if (response.ok) {
-      return true;
+      this.pId = (await response.json()).pId
+      return this.pId
     } else {
       throw Error(`Failed to ping with server ${await response.text()} `);
     }
@@ -129,23 +132,40 @@ export class RebyteAPI {
     return exts['json']
   }
 
-  //
-  async upsertDoc(): Promise<string> {
-    // const response = await fetch(this.base + `/p/${}/knowledge/${}/d/${docid}`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Authorization": `Bearer ${this.key}`,
-    //     "Accept": "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    //
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   return data
-    // } else {
-    //   throw Error(`Failed to get js bundles: `);
-    // }
-    return ""
+  async upsertDoc(knowledgeName: string, file: string): Promise<string> {
+    const urlSafeName = encodeURIComponent(knowledgeName);
+    const url = `${this.base}/p/${this.pId}/knowledge/${urlSafeName}/d/${file}`
+
+    const runnerRequestConfig = {
+      headers: {
+        "Authorization": `Bearer ${this.key}`,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const timestamp = Date.now();
+    const runnerRequestPayload = {
+      text: "",
+      source_url: "",
+      timestamp,
+      tags: [],
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: runnerRequestConfig.headers,
+      body: JSON.stringify(runnerRequestPayload),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("upserted doc success: ", file)
+      return data
+    } else {
+      console.log(response.status)
+      console.log(await response.json())
+      throw Error(`Failed to index file ${file}`);
+    }
   }
 }

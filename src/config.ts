@@ -6,11 +6,13 @@ const CONFIG_FILE_NAME = "config.json";
 export type RebyteServer = {
   url: string;
   api_key: string;
+  pId: string;
 };
 
 class RebyteConfig {
   config_dir: string;
   api_key?: string;
+  pId?: string;
   servers: RebyteServer[];
 
   constructor() {
@@ -26,8 +28,9 @@ class RebyteConfig {
     const filePath = this.config_dir + "/" + CONFIG_FILE_NAME;
     try {
       const cachedConfig = JSON.parse(await Deno.readTextFile(filePath));
-      if (cachedConfig && cachedConfig.api_key) {
+      if (cachedConfig && cachedConfig.api_key && cachedConfig.pId) {
         this.api_key = cachedConfig.api_key;
+        this.pId = cachedConfig.pId;
       }
       this.servers = cachedConfig.servers || [];
       // this.servers = cachedConfig.servers;
@@ -37,7 +40,7 @@ class RebyteConfig {
   }
 
   activeServer(): RebyteServer | undefined {
-    if (!this.api_key) {
+    if (!this.api_key || !this.pId) {
       return;
     }
     return this.servers.find((s) => s.api_key === this.api_key);
@@ -59,13 +62,14 @@ export const config = new RebyteConfig();
 await config.restore();
 
 export async function login(api_key: string, url: string): Promise<boolean> {
-  const client = new RebyteAPI({ api_key, url });
-  const logged = await client.ping();
-  if (!logged) {
+  const client = new RebyteAPI({ api_key, url, pId: "" });
+  const pId = await client.ping();
+  if (!pId) {
     return false;
   }
   config.api_key = api_key;
-  config.servers.push({ api_key, url });
+  config.pId = pId;
+  config.servers.push({ api_key, url, pId});
   await config.save();
   return true;
 }

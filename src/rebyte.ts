@@ -7,10 +7,29 @@ import { config } from "./config.ts";
 
 import { chalk} from "../deps.ts";
 
-import Table from "easy-table";
-
-
 const REBYTE_JSON_FILE = "rebyte.json";
+
+export const supportedFileTypes = [
+  "doc",
+  "docx",
+  "img",
+  "epub",
+  "jpeg",
+  "jpg",
+  "png",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "md",
+  "txt",
+  "rtf",
+  "rst",
+  "pdf",
+  "json",
+  "html",
+  "eml",
+]
 
 
 function logSuccess(msg: string) {
@@ -91,16 +110,23 @@ export async function list_extension() {
 
   const extensions = await client.getExtensions();
 
-  // extensions.forEach(function(ext) {
-  //   Table.print(ext[1])
-  // })
-  //
-  // // console.log(t.toString())
-
   console.log(extensions)
 
   logSuccess("List extension success 🎉");
 }
+
+export async function list_knowledge() {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const agents = await client.listAgents()
+  console.log(agents)
+
+  logSuccess("List agent success");
+}
+
 
 export async function list_agent() {
   const activeServer = config.activeServer();
@@ -114,10 +140,33 @@ export async function list_agent() {
   logSuccess("List agent success");
 }
 
-export async function import_dir(dir: string, rebyte: RebyteJson) {
+export async function import_dir(dir: string, knowledgeName: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {
     throw Error("Please login first");
   }
-  logSuccess("List callable success");
+
+  const files = [];
+  for await (const entry of Deno.readDir(dir)) {
+    if (entry.isFile) {
+      const ext = path.extname(entry.name).slice(1);
+      if (supportedFileTypes.includes(ext)) {
+        files.push(entry.name);
+      }
+    }
+  }
+  console.log(files)
+  const shouldProceed = confirm(`Found ${files.length} files, Do you want to proceed?`);
+  if (!shouldProceed) {
+    return;
+  }
+
+  // index files
+  const client = new RebyteAPI(activeServer);
+  // track progress and log failed files
+  for (const file of files) {
+    await client.upsertDoc(knowledgeName, file)
+  }
+
+  logSuccess(`Index directory ${dir} success 🎉`);
 }

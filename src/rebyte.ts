@@ -52,7 +52,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   }
   // check name is available
   const client = new RebyteAPI(activeServer);
-  // await client.checkJsBlockName(rebyte);
+  await client.checkValidVersion(rebyte);
 
   Deno.chdir(dir);
   const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");
@@ -74,30 +74,30 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const fileId = getUploadFileName(rebyte);
   const uploadURL = await client.getUploadURL(fileId);
   await client.uploadFile(uploadURL, output);
-  await client.createJsBlock(rebyte, fileId);
+  await client.createExtension(rebyte, fileId);
   console.log("Deploy ReByte Customized Block success");
 }
 
-export async function list_jsbundle() {
+export async function list_extension() {
   const activeServer = config.activeServer();
   if (!activeServer) {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
 
-  const jsBundles = await client.getJsBundles();
+  const jsBundles = await client.getExtensions();
 
   console.log("jsBundles", jsBundles);
 
-  logSuccess("List jsbundle success 🎉");
+  logSuccess("List extension success 🎉");
 }
 
-export async function list_callable() {
+export async function list_agent() {
   const activeServer = config.activeServer();
   if (!activeServer) {
     throw Error("Please login first");
   }
-  logSuccess("List callable success");
+  logSuccess("List agent success");
 }
 
 export async function import_dir(dir: string, rebyte: RebyteJson) {
@@ -107,4 +107,3 @@ export async function import_dir(dir: string, rebyte: RebyteJson) {
   }
   logSuccess("List callable success");
 }
-

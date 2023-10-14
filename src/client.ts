@@ -14,7 +14,7 @@ export class RebyteAPI {
   }
 
   async ping(): Promise<boolean> {
-    const response = await fetch(this.base + "/block/ping", {
+    const response = await fetch(this.base + "/ext/ping", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -34,7 +34,7 @@ export class RebyteAPI {
   }
 
   async getUploadURL(fileName: string): Promise<string> {
-    const response = await fetch(this.base + "/block/upload", {
+    const response = await fetch(this.base + "/ext/upload", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -66,8 +66,8 @@ export class RebyteAPI {
     }
   }
 
-  async checkJsBlockName(rebyte: RebyteJson) {
-    const response = await fetch(this.base + "/block/check", {
+  async checkValidVersion(rebyte: RebyteJson) {
+    const response = await fetch(this.base + "/ext/check", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -85,8 +85,8 @@ export class RebyteAPI {
     }
   }
 
-  async createJsBlock(rebyte: RebyteJson, fileId: string) {
-    const response = await fetch(this.base + "/block", {
+  async createExtension(rebyte: RebyteJson, fileId: string) {
+    const response = await fetch(this.base + "/ext", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -97,12 +97,12 @@ export class RebyteAPI {
     });
 
     if (!response.ok) {
-      throw Error(`Failed to create JsBundle err: ${await response.text()} `);
+      throw Error(`Failed to create extension err: ${await response.text()} `);
     }
   }
 
-  async getJsBundles(): Promise<string> {
-    const response = await fetch(this.base + "/block", {
+  async getExtensions(): Promise<string> {
+    const response = await fetch(this.base + "/ext", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -115,7 +115,7 @@ export class RebyteAPI {
       const data = await response.json();
       return data
     } else {
-      throw Error(`Failed to get js bundles: `);
+      throw Error(`Failed to get extensions`);
     }
   }
 

@@ -53,7 +53,7 @@ cli.command("deploy <dir>", "deploy your extension to rebyte")
   .action(async (dir) => {
     const rebyte = await newRebyteJson(dir);
     await deploy(dir, rebyte);
-  });
+  }).example("rebyte deploy .");
 
 cli.command("import <dir>", "import dir to knowledges")
     .action(async (dir) => {
@@ -64,5 +64,6 @@ cli.command("import <dir>", "import dir to knowledges")
 cli.help()
 cli.version(version)
 cli.outputHelp();
-cli.parse()
+const parsed = cli.parse()
+
 

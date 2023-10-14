@@ -86,7 +86,7 @@ export class RebyteAPI {
   }
 
   async createExtension(rebyte: RebyteJson, fileId: string) {
-    const response = await fetch(this.base + "/ext", {
+    const response = await fetch(this.base + `/ext/${rebyte.name}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,

@@ -75,7 +75,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const uploadURL = await client.getUploadURL(fileId);
   await client.uploadFile(uploadURL, output);
   await client.createExtension(rebyte, fileId);
-  console.log("Deploy ReByte Customized Block success");
+  console.log("Deploy ReByte Extension Success 🎉");
 }
 
 export async function list_extension() {

@@ -8,7 +8,15 @@ const publicProcedure = t.procedure;
 
 export const appRouter = router({
   "extension.get": publicProcedure.query(() => {
-    return {}
+    return [
+        ["extension1", [
+            {
+                name: "extension1",
+                description: "extension1",
+              version: "1.0.0",
+            }
+        ]],
+    ]
   }),
   "callable.getCallables": publicProcedure.query(() => {
     return {}

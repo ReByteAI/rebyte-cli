@@ -3,7 +3,16 @@
     "@trpc/server": "https://esm.sh/v119/@trpc/server@10.28.2",
     "@trpc/server/": "https://esm.sh/v119/@trpc/server@10.28.2/",
     "@trpc/client": "https://esm.sh/v119/@trpc/client@10.28.2",
-    "zod": "https://deno.land/x/zod@v3.21.4/mod.ts"
+    "zod": "https://deno.land/x/zod@v3.21.4/mod.ts",
+    "easy-table": "https://ga.jspm.io/npm:easy-table@1.2.0/table.js"
   },
-  "scopes": {}
+  "scopes": {
+    "https://ga.jspm.io/": {
+      "ansi-regex": "https://ga.jspm.io/npm:ansi-regex@5.0.1/index.js",
+      "buffer": "node:buffer",
+      "clone": "https://ga.jspm.io/npm:clone@1.0.4/clone.js",
+      "defaults": "https://ga.jspm.io/npm:defaults@1.0.4/index.js",
+      "wcwidth": "https://ga.jspm.io/npm:wcwidth@1.0.1/index.js"
+    }
+  }
 }

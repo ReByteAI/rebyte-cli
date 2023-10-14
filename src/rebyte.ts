@@ -7,7 +7,11 @@ import { config } from "./config.ts";
 
 import { chalk} from "../deps.ts";
 
+import Table from "easy-table";
+
+
 const REBYTE_JSON_FILE = "rebyte.json";
+
 
 function logSuccess(msg: string) {
   console.log(chalk.green(msg));
@@ -85,9 +89,15 @@ export async function list_extension() {
   }
   const client = new RebyteAPI(activeServer);
 
-  const jsBundles = await client.getExtensions();
+  const extensions = await client.getExtensions();
 
-  console.log(jsBundles)
+  // extensions.forEach(function(ext) {
+  //   Table.print(ext[1])
+  // })
+  //
+  // // console.log(t.toString())
+
+  console.log(extensions)
 
   logSuccess("List extension success 🎉");
 }

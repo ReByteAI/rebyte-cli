@@ -124,7 +124,7 @@ export class RebyteAPI {
     }
   }
 
-  async getExtensions(): Promise<string> {
+  async getExtensions() {
     const exts = await this.trpc["extension.get"].query();
     return exts['json']
   }

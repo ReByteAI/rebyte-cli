@@ -39,12 +39,12 @@ cli.command("logout", "Logout current project")
     console.log("logout not implement yet");
   });
 
-cli.command("list-agents", "List all agent belong to you")
+cli.command("list-agent", "List all agent belong to you")
   .action(async () => {
     await list_agent();
   });
 
-cli.command("list-extensions", "List all extensions belong to project")
+cli.command("list-extension", "List all extensions belong to project")
   .action(async () => {
     await list_extension();
   });

@@ -10,6 +10,9 @@ export const appRouter = router({
   "extension.get": publicProcedure.query(() => {
     return {}
   }),
+  "callable.getCallables": publicProcedure.query(() => {
+    return {}
+  }),
   // "post.create": publicProceducre
   //     .input(
   //         z.object({

@@ -98,7 +98,8 @@ export async function list_agent() {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  // client.checkValidVersion()
+  const agents = await client.listAgents()
+  console.log(agents)
 
   logSuccess("List agent success");
 }

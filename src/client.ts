@@ -85,7 +85,8 @@ export class RebyteAPI {
   }
 
   async listAgents() {
-
+    const exts = await this.trpc["callable.getCallables"].query();
+    return exts['json']
   }
 
   async checkValidVersion(rebyte: RebyteJson) {

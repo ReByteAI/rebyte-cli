@@ -44,10 +44,10 @@ cli.command("list-agents", "List all agent belong to you")
     await list_agent();
   });
 
-// cli.command("list-extensions", "List all extensions belong to project")
-//   .action(async () => {
-//     await list_extension();
-//   });
+cli.command("list-extensions", "List all extensions belong to project")
+  .action(async () => {
+    await list_extension();
+  });
 
 cli.command("deploy <dir>", "deploy your extension to rebyte")
   .action(async (dir) => {
@@ -65,5 +65,3 @@ cli.help()
 cli.version(version)
 cli.outputHelp();
 const parsed = cli.parse()
-
-

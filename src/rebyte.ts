@@ -87,7 +87,7 @@ export async function list_extension() {
 
   const jsBundles = await client.getExtensions();
 
-  console.log("jsBundles", jsBundles);
+  console.log(jsBundles)
 
   logSuccess("List extension success 🎉");
 }
@@ -97,6 +97,9 @@ export async function list_agent() {
   if (!activeServer) {
     throw Error("Please login first");
   }
+  const client = new RebyteAPI(activeServer);
+  // client.checkValidVersion()
+
   logSuccess("List agent success");
 }
 

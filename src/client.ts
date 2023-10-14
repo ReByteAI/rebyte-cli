@@ -1,16 +1,34 @@
 import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/mod.ts";
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import {AppRouter} from "./router.ts";
 
 var env = Deno.env.toObject();
 
 export class RebyteAPI {
   key: string;
   base: string;
+  trpc: any
 
   constructor(server: RebyteServer) {
     this.key = server.api_key;
     this.base = server.url + "/api/sdk";
+
+    const client = createTRPCProxyClient<AppRouter>({
+      links: [
+        httpBatchLink({
+          url: `${server.url}/api/trpc`,
+          // You can pass any HTTP headers you wish here
+          headers() {
+            return {
+              "Authorization": `Bearer ${server.api_key}`,
+            };
+          },
+        }),
+      ],
+    });
+    this.trpc = client
   }
 
   async ping(): Promise<boolean> {
@@ -66,6 +84,10 @@ export class RebyteAPI {
     }
   }
 
+  async listAgents() {
+
+  }
+
   async checkValidVersion(rebyte: RebyteJson) {
     const response = await fetch(this.base + "/ext/check", {
       method: "POST",
@@ -102,21 +124,8 @@ export class RebyteAPI {
   }
 
   async getExtensions(): Promise<string> {
-    const response = await fetch(this.base + "/ext", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data
-    } else {
-      throw Error(`Failed to get extensions`);
-    }
+    const exts = await this.trpc["extension.get"].query();
+    return exts['json']
   }
 
   //

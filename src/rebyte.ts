@@ -64,8 +64,8 @@ export async function newRebyteJson(dir: string): Promise<RebyteJson> {
   return RebyteJson.parse(data);
 }
 
-function getUploadFileName(rebyte: RebyteJson): string {
-  return rebyte.name + "-" + rebyte.version + "-" + new Date().getTime();
+function getUploadFileName(rebyte: RebyteJson, pid: string): string {
+  return pid + "-" + rebyte.name + "-" + rebyte.version + "-" + new Date().getTime();
 }
 
 export async function deploy(dir: string, rebyte: RebyteJson) {
@@ -94,7 +94,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   esbuild.stop();
 
   // get upload url
-  const fileId = getUploadFileName(rebyte);
+  const fileId = getUploadFileName(rebyte, activeServer.pId);
   const uploadURL = await client.getUploadURL(fileId);
   await client.uploadFile(uploadURL, output);
   await client.createExtension(rebyte, fileId);
@@ -155,7 +155,7 @@ export async function import_dir(dir: string, knowledgeName: string) {
       }
     }
   }
-  console.log(files.map((f) => f.name))
+  // console.log(files.map((f) => f.name))
   const shouldProceed = confirm(`Found ${files.length} files, Do you want to proceed?`);
   if (!shouldProceed) {
     return;

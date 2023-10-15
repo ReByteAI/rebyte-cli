@@ -77,6 +77,12 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const client = new RebyteAPI(activeServer);
   await client.checkValidVersion(rebyte);
 
+  const shouldProceed = confirm(`Are you sure you want to deploy ${rebyte.name} version ${rebyte.version} to ${activeServer.url}?`);
+  if (!shouldProceed) {
+    console.log("Deploy canceled")
+    return;
+  }
+
   Deno.chdir(dir);
   const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");
   const output = path.join(
@@ -98,7 +104,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const uploadURL = await client.getUploadURL(fileId);
   await client.uploadFile(uploadURL, output);
   await client.createExtension(rebyte, fileId);
-  console.log("Deploy ReByte Extension Success 🎉");
+  console.log(`Deploy ReByte Extension Success 🎉, you can go to ${activeServer.url}/p/${activeServer.pId}/settings/extensions to check it`);
 }
 
 export async function list_extension() {

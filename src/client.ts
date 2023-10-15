@@ -3,17 +3,22 @@ import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import {AppRouter} from "./router.ts";
+import DirEntry = Deno.DirEntry;
+
+import * as path from "https://deno.land/std/path/mod.ts";
 
 var env = Deno.env.toObject();
 
 export class RebyteAPI {
   key: string;
+  server: string;
   base: string;
   trpc: any;
   pId: string
 
   constructor(server: RebyteServer) {
     this.key = server.api_key;
+    this.server = server.url;
     this.base = server.url + "/api/sdk";
     this.pId = server.pId
 
@@ -132,30 +137,28 @@ export class RebyteAPI {
     return exts['json']
   }
 
-  async upsertDoc(knowledgeName: string, file: string): Promise<string> {
+  async upsertDoc(knowledgeName: string, file: DirEntry, baseDir: string): Promise<string> {
     const urlSafeName = encodeURIComponent(knowledgeName);
-    const url = `${this.base}/p/${this.pId}/knowledge/${urlSafeName}/d/${file}`
+    const url = `${this.base}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`
+
+    const fileContent = await Deno.readFile(path.join(baseDir, file.name));
+
+    const form = new FormData();
+    form.append("file", new Blob([fileContent]), file.name);
 
     const runnerRequestConfig = {
       headers: {
         "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": `multipart/form-data;`,
       },
     };
 
-    const timestamp = Date.now();
-    const runnerRequestPayload = {
-      text: "",
-      source_url: "",
-      timestamp,
-      tags: [],
-    };
+    // console.log(form)
 
     const response = await fetch(url, {
       method: "POST",
       headers: runnerRequestConfig.headers,
-      body: JSON.stringify(runnerRequestPayload),
+      body: form,
     });
 
     if (response.ok) {

@@ -7,12 +7,26 @@ import {
   newRebyteJson,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
+import {compareVersion} from "./utils.ts";
 
 const cli = cac("rebyte");
 
 cli.command("update", "Update rebyte cli to latest version")
     .action(async () => {
-      console.log("update not implement yet");
+      // get content https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest
+      // download content
+
+      const response = await
+      fetch("https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest")
+      const latestVersion = JSON.parse(await response.text()).tag_name
+      // remove v from version
+      const latestVersionNumber = latestVersion.substring(1)
+      const currentVersionNumber = version.substring(1)
+      if (compareVersion(currentVersionNumber, latestVersionNumber)) {
+        console.log(`New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`)
+      } else {
+        console.log("You are using latest version")
+      }
     });
 
 cli.command("login", "Login rebyte use your api key")

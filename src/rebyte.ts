@@ -151,11 +151,11 @@ export async function import_dir(dir: string, knowledgeName: string) {
     if (entry.isFile) {
       const ext = path.extname(entry.name).slice(1);
       if (supportedFileTypes.includes(ext)) {
-        files.push(entry.name);
+        files.push(entry);
       }
     }
   }
-  console.log(files)
+  console.log(files.map((f) => f.name))
   const shouldProceed = confirm(`Found ${files.length} files, Do you want to proceed?`);
   if (!shouldProceed) {
     return;
@@ -165,7 +165,7 @@ export async function import_dir(dir: string, knowledgeName: string) {
   const client = new RebyteAPI(activeServer);
   // track progress and log failed files
   for (const file of files) {
-    await client.upsertDoc(knowledgeName, file)
+    await client.upsertDoc(knowledgeName, file, dir)
   }
 
   logSuccess(`Index directory ${dir} success 🎉`);

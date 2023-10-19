@@ -69,7 +69,10 @@ export async function login(api_key: string, url: string): Promise<boolean> {
   }
   config.api_key = api_key;
   config.pId = pId;
-  config.servers.push({ api_key, url, pId});
+  const exists = config.servers.find(server => server.url == url && server.pId == pId)
+  if (!exists) {
+    config.servers.push({ api_key, url, pId});
+  }
   await config.save();
   return true;
 }

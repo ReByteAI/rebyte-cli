@@ -4,7 +4,6 @@
     "@trpc/server/": "https://esm.sh/v119/@trpc/server@10.28.2/",
     "@trpc/client": "https://esm.sh/v119/@trpc/client@10.28.2",
     "zod": "https://deno.land/x/zod@v3.21.4/mod.ts",
-    "easy-table": "https://ga.jspm.io/npm:easy-table@1.2.0/table.js",
     "axios": "https://esm.sh/axios"
   },
   "scopes": {

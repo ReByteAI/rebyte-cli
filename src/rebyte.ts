@@ -5,6 +5,9 @@ import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
 import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
 
+import AsciiTable, { AsciiAlign } from 'https://deno.land/x/ascii_table/mod.ts';
+
+
 import { chalk} from "../deps.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
@@ -116,7 +119,12 @@ export async function list_extension() {
 
   const extensions = await client.getExtensions();
 
-  console.log(extensions)
+  const table = AsciiTable.fromJSON({
+    title: 'Action Extensions',
+    heading: [ 'id', 'name' ],
+    rows: extensions.map((a: any) => [a.sId, a.name])
+  })
+  console.log(table.toString())
 
   logSuccess("List extension success 🎉");
 }
@@ -128,7 +136,13 @@ export async function list_knowledge() {
   }
   const client = new RebyteAPI(activeServer);
   const agents = await client.listAgents()
-  console.log(agents)
+
+  const table = AsciiTable.fromJSON({
+    title: 'Title',
+    heading: [ 'id', 'name' ],
+    rows: agents
+  })
+  console.log(table)
 
   logSuccess("List agent success");
 }
@@ -141,7 +155,12 @@ export async function list_agent() {
   }
   const client = new RebyteAPI(activeServer);
   const agents = await client.listAgents()
-  console.log(agents)
+  const table = AsciiTable.fromJSON({
+    title: 'Agents',
+    heading: [ 'id', 'name' ],
+    rows: agents.map((a: any) => [a.sId, a.name])
+  })
+  console.log(table.toString())
 
   logSuccess("List agent success");
 }
@@ -162,6 +181,15 @@ export async function import_dir(dir: string, knowledgeName: string) {
     }
   }
   // console.log(files.map((f) => f.name))
+
+  const table = AsciiTable.fromJSON({
+    title: 'Files',
+    heading: [ 'name'],
+    rows: files.map((f) => [f.name])
+  })
+
+  console.log(table.toString())
+
   const shouldProceed = confirm(`Found ${files.length} files, Do you want to proceed?`);
   if (!shouldProceed) {
     return;

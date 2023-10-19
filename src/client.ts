@@ -5,6 +5,8 @@ import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import {AppRouter} from "./router.ts";
 import DirEntry = Deno.DirEntry;
 
+import axiod from "https://deno.land/x/axiod/mod.ts";
+
 import * as path from "https://deno.land/std/path/mod.ts";
 
 var env = Deno.env.toObject();
@@ -12,14 +14,14 @@ var env = Deno.env.toObject();
 export class RebyteAPI {
   key: string;
   server: string;
-  base: string;
+  sdkBase: string;
   trpc: any;
   pId: string
 
   constructor(server: RebyteServer) {
     this.key = server.api_key;
     this.server = server.url;
-    this.base = server.url + "/api/sdk";
+    this.sdkBase = server.url + "/api/sdk";
     this.pId = server.pId
 
     const client = createTRPCProxyClient<AppRouter>({
@@ -39,7 +41,7 @@ export class RebyteAPI {
   }
 
   async ping(): Promise<string | null> {
-    const response = await fetch(this.base + "/ext/ping", {
+    const response = await fetch(this.sdkBase + "/ext/ping", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -60,7 +62,7 @@ export class RebyteAPI {
   }
 
   async getUploadURL(fileName: string): Promise<string> {
-    const response = await fetch(this.base + "/ext/upload", {
+    const response = await fetch(this.sdkBase + "/ext/upload", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -98,7 +100,7 @@ export class RebyteAPI {
   }
 
   async checkValidVersion(rebyte: RebyteJson) {
-    const response = await fetch(this.base + "/ext/check", {
+    const response = await fetch(this.sdkBase + "/ext/check", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -117,7 +119,7 @@ export class RebyteAPI {
   }
 
   async createExtension(rebyte: RebyteJson, fileId: string) {
-    const response = await fetch(this.base + `/ext/${rebyte.name}`, {
+    const response = await fetch(this.sdkBase + `/ext/${rebyte.name}`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.key}`,
@@ -139,14 +141,17 @@ export class RebyteAPI {
 
   async upsertDoc(knowledgeName: string, file: DirEntry, baseDir: string): Promise<string> {
     const urlSafeName = encodeURIComponent(knowledgeName);
-    const url = `${this.base}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`
+    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`
 
     const fileContent = await Deno.readFile(path.join(baseDir, file.name));
 
     const form = new FormData();
-    form.append("file", new Blob([fileContent]), file.name);
+    form.append("file", new Blob([fileContent], {
+      type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
+    }), file.name);
+    form.append("knowledgeName", knowledgeName);
 
-    const runnerRequestConfig = {
+    const requestConfig = {
       headers: {
         "Authorization": `Bearer ${this.key}`,
         "Content-Type": `multipart/form-data;`,
@@ -154,20 +159,20 @@ export class RebyteAPI {
     };
 
     // console.log(form)
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: runnerRequestConfig.headers,
-      body: form,
+    const instance = axiod.create({
+      baseURL: url,
+      timeout: 10000,
+      headers: requestConfig.headers,
     });
+    const response = await instance.post(url, form)
 
-    if (response.ok) {
-      const data = await response.json();
+    if (response.status === 200) {
+      const data = response.data
       console.log("upserted doc success: ", file)
       return data
     } else {
       console.log(response.status)
-      console.log(await response.json())
+      console.log(response.data)
       throw Error(`Failed to index file ${file}`);
     }
   }

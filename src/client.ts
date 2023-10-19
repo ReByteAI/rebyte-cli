@@ -143,13 +143,13 @@ export class RebyteAPI {
     const urlSafeName = encodeURIComponent(knowledgeName);
     const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`
 
-    const fileContent = await Deno.readFile(path.join(baseDir, file.name));
+    // const fileContent = await Deno.readFile(path.join(baseDir, file.name));
 
-    const form = new FormData();
-    form.append("file", new Blob([fileContent], {
-      type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
-    }), file.name);
-    form.append("knowledgeName", knowledgeName);
+    // const form = new FormData();
+    // form.append("file", new Blob([fileContent], {
+    //   type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
+    // }), file.name);
+    // form.append("knowledgeName", knowledgeName);
 
     const requestConfig = {
       headers: {
@@ -159,21 +159,31 @@ export class RebyteAPI {
     };
 
     // console.log(form)
-    const instance = axiod.create({
-      baseURL: url,
-      timeout: 10000,
-      headers: requestConfig.headers,
-    });
-    const response = await instance.post(url, form)
+    // const instance = axiod.create({
+    //   baseURL: url,
+    //   timeout: 10000,
+    //   headers: requestConfig.headers,
+    // });
+    // const response = await instance.post(url, form)
 
-    if (response.status === 200) {
-      const data = response.data
-      console.log("upserted doc success: ", file)
-      return data
-    } else {
-      console.log(response.status)
-      console.log(response.data)
-      throw Error(`Failed to index file ${file}`);
-    }
+    const f = await Deno.open(path.join(baseDir, file.name));
+    const response = await fetch(url, {
+      method: "POST",
+      body: readableStreamFromReader(f),
+      headers: {
+        // "Content-Type": `multipart/form-data;`,
+        "Authorization": `Bearer ${this.key}`,
+      },
+    });
+
+    // if (response.status === 200) {
+    //   // const data = response.data
+    //   console.log("upserted doc success: ", file)
+    //   return
+    // } else {
+    //   console.log(response.status)
+    //   // console.log(response.data)
+    //   throw Error(`Failed to index file ${file}`);
+    // }
   }
 }

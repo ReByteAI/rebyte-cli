@@ -1,6 +1,6 @@
 import * as path from "https://deno.land/std@0.201.0/path/mod.ts";
-import * as esbuild from "https://deno.land/x/esbuild@v0.17.19/mod.js";
-import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.1/mod.ts";
+import * as esbuild from "https://deno.land/x/esbuild@v0.19.4/mod.js";
+import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.2/mod.ts";
 import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
 import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
@@ -78,6 +78,27 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   }
   // check name is available
   const client = new RebyteAPI(activeServer);
+
+  Deno.chdir(dir);
+  const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");
+  const output = path.join(
+      Deno.cwd(),
+      rebyte.out ?? "./dist/" + rebyte.name + ".js",
+  );
+
+  await esbuild.build({
+    // plugins: [...denoPlugins({ loader: "portable", nodeModulesDir: true })],
+    plugins: [...denoPlugins({ loader: "portable", configPath: "/Users/homo/src/callable/ext_diagram/deno.json"})],
+    entryPoints: [entryPoint],
+    outfile: output,
+    bundle: true,
+    format: "esm",
+    write: true,
+  });
+  esbuild.stop();
+
+  console.log("Build success 🎉")
+
   await client.checkValidVersion(rebyte);
 
   const shouldProceed = confirm(`Are you sure you want to deploy ${rebyte.name} version ${rebyte.version} to ${activeServer.url}?`);
@@ -86,21 +107,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
     return;
   }
 
-  Deno.chdir(dir);
-  const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");
-  const output = path.join(
-    Deno.cwd(),
-    rebyte.out ?? "./dist/" + rebyte.name + ".js",
-  );
-  await esbuild.build({
-    plugins: [...denoPlugins({ loader: "portable", nodeModulesDir: true })],
-    entryPoints: [entryPoint],
-    outfile: output,
-    bundle: true,
-    format: "esm",
-    write: true,
-  });
-  esbuild.stop();
+
 
   // get upload url
   const fileId = getUploadFileName(rebyte, activeServer.pId);

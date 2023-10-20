@@ -2,7 +2,7 @@ import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import {AppRouter} from "./router.ts";
+import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 
 import axiod from "https://deno.land/x/axiod/mod.ts";
@@ -16,13 +16,13 @@ export class RebyteAPI {
   server: string;
   sdkBase: string;
   trpc: any;
-  pId: string
+  pId: string;
 
   constructor(server: RebyteServer) {
     this.key = server.api_key;
     this.server = server.url;
     this.sdkBase = server.url + "/api/sdk";
-    this.pId = server.pId
+    this.pId = server.pId;
 
     const client = createTRPCProxyClient<AppRouter>({
       links: [
@@ -31,21 +31,21 @@ export class RebyteAPI {
           // You can pass any HTTP headers you wish here
           headers() {
             return {
-              "Authorization": `Bearer ${server.api_key}`,
+              Authorization: `Bearer ${server.api_key}`,
             };
           },
         }),
       ],
     });
-    this.trpc = client
+    this.trpc = client;
   }
 
   async ping(): Promise<string | null> {
     const response = await fetch(this.sdkBase + "/ext/ping", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
+        Authorization: `Bearer ${this.key}`,
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     });
@@ -54,8 +54,8 @@ export class RebyteAPI {
       return null;
     }
     if (response.ok) {
-      this.pId = (await response.json()).pId
-      return this.pId
+      this.pId = (await response.json()).pId;
+      return this.pId;
     } else {
       throw Error(`Failed to ping with server ${await response.text()} `);
     }
@@ -65,8 +65,8 @@ export class RebyteAPI {
     const response = await fetch(this.sdkBase + "/ext/upload", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
+        Authorization: `Bearer ${this.key}`,
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ fileName }),
@@ -96,15 +96,15 @@ export class RebyteAPI {
 
   async listAgents() {
     const exts = await this.trpc["callable.getCallables"].query();
-    return exts['json']
+    return exts["json"];
   }
 
   async checkValidVersion(rebyte: RebyteJson) {
     const response = await fetch(this.sdkBase + "/ext/check", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
+        Authorization: `Bearer ${this.key}`,
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name: rebyte.name, version: rebyte.version }),
@@ -122,8 +122,8 @@ export class RebyteAPI {
     const response = await fetch(this.sdkBase + `/ext/${rebyte.name}`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${this.key}`,
-        "Accept": "application/json",
+        Authorization: `Bearer ${this.key}`,
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ ...rebyte, fileId }),
@@ -136,24 +136,33 @@ export class RebyteAPI {
 
   async getExtensions() {
     const exts = await this.trpc["extension.get"].query();
-    return exts['json']
+    return exts["json"];
   }
 
-  async upsertDoc(knowledgeName: string, file: DirEntry, baseDir: string): Promise<string> {
+  async upsertDoc(
+    knowledgeName: string,
+    file: DirEntry,
+    baseDir: string
+  ): Promise<string> {
     const urlSafeName = encodeURIComponent(knowledgeName);
-    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`
+    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`;
 
-    // const fileContent = await Deno.readFile(path.join(baseDir, file.name));
+    const fileContent = await Deno.readFile(path.join(baseDir, file.name));
 
-    // const form = new FormData();
-    // form.append("file", new Blob([fileContent], {
-    //   type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
-    // }), file.name);
-    // form.append("knowledgeName", knowledgeName);
+    const form = new FormData();
+    form.append(
+      "file",
+      new Blob([fileContent], {
+        type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
+      }),
+      file.name
+    );
+    form.append("knowledgeName", knowledgeName);
+    form.append("test1", knowledgeName);
 
     const requestConfig = {
       headers: {
-        "Authorization": `Bearer ${this.key}`,
+        Authorization: `Bearer ${this.key}`,
         "Content-Type": `multipart/form-data;`,
       },
     };
@@ -166,15 +175,20 @@ export class RebyteAPI {
     // });
     // const response = await instance.post(url, form)
 
-    const f = await Deno.open(path.join(baseDir, file.name));
-    const response = await fetch(url, {
-      method: "POST",
-      body: readableStreamFromReader(f),
-      headers: {
-        // "Content-Type": `multipart/form-data;`,
-        "Authorization": `Bearer ${this.key}`,
-      },
-    });
+    // const f = await Deno.open(path.join(baseDir, file.name));
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: form,
+        headers: {
+          // "Content-Type": `multipart/form-data; boundary=-----bbbb`,
+          Authorization: `Bearer ${this.key}`,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
 
     // if (response.status === 200) {
     //   // const data = response.data

@@ -144,8 +144,9 @@ export class RebyteAPI {
     file: DirEntry,
     baseDir: string
   ): Promise<string> {
+    console.log("upserting doc: ", file.name)
     const urlSafeName = encodeURIComponent(knowledgeName);
-    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}`;
+    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}/upload`;
 
     const fileContent = await Deno.readFile(path.join(baseDir, file.name));
 
@@ -158,46 +159,20 @@ export class RebyteAPI {
       file.name
     );
     form.append("knowledgeName", knowledgeName);
-    form.append("test1", knowledgeName);
 
-    const requestConfig = {
-      headers: {
-        Authorization: `Bearer ${this.key}`,
-        "Content-Type": `multipart/form-data;`,
-      },
-    };
-
-    // console.log(form)
-    // const instance = axiod.create({
-    //   baseURL: url,
-    //   timeout: 10000,
-    //   headers: requestConfig.headers,
-    // });
-    // const response = await instance.post(url, form)
-
-    // const f = await Deno.open(path.join(baseDir, file.name));
     try {
       const response = await fetch(url, {
         method: "POST",
         body: form,
         headers: {
-          // "Content-Type": `multipart/form-data; boundary=-----bbbb`,
           Authorization: `Bearer ${this.key}`,
         },
       });
-      console.log(response);
+      console.log("upserted doc success: ", file.name)
+      return response.statusText;
     } catch (error) {
       console.log(error);
+      throw Error(`Failed to index file ${file.name}`);
     }
-
-    // if (response.status === 200) {
-    //   // const data = response.data
-    //   console.log("upserted doc success: ", file)
-    //   return
-    // } else {
-    //   console.log(response.status)
-    //   // console.log(response.data)
-    //   throw Error(`Failed to index file ${file}`);
-    // }
   }
 }

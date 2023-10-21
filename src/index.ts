@@ -93,7 +93,6 @@ async function update() {
   // remove v from version
   const latestVersionNumber = latestVersion.substring(1)
   const currentVersionNumber = version.substring(1)
-  console.log(latestVersionNumber, currentVersionNumber)
   if (compareVersion(currentVersionNumber, latestVersionNumber)) {
     console.log(`New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`)
     return false

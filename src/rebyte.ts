@@ -87,8 +87,8 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   );
 
   await esbuild.build({
-    // plugins: [...denoPlugins({ loader: "portable", nodeModulesDir: true })],
-    plugins: [...denoPlugins({ loader: "portable", configPath: "/Users/homo/src/callable/ext_diagram/deno.json"})],
+    plugins: [...denoPlugins({ loader: "portable", nodeModulesDir: true })],
+    // plugins: [...denoPlugins({ loader: "portable", configPath: "/Users/homo/src/callable/ext_diagram/deno.json"})],
     entryPoints: [entryPoint],
     outfile: output,
     bundle: true,

@@ -46,6 +46,11 @@ const RebyteJson = z.object({
       message: "Only lowercase letters, number and underline are allowed",
     },
   ),
+  displayName: z.string().max(
+    30, {
+      message: "displayName must be less than 30 characters",
+      }
+  ).optional().nullable(),
   description: z.string().optional().nullable(),
   version: z.string(),
   main: z.string().optional().nullable(),

@@ -107,8 +107,6 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
     return;
   }
 
-
-
   // get upload url
   const fileId = getUploadFileName(rebyte, activeServer.pId);
   const uploadURL = await client.getUploadURL(fileId);
@@ -124,12 +122,19 @@ export async function list_extension() {
   }
   const client = new RebyteAPI(activeServer);
 
-  const extensions = await client.getExtensions();
+  let extensions = await client.getExtensions();
+  // flatten
+  extensions = extensions.reduce((acc: any, cur: any) => {
+    acc.push(...cur[1]);
+    return acc;
+  }, [])
+
+  // console.log(extensions)
 
   const table = AsciiTable.fromJSON({
     title: 'Action Extensions',
     heading: [ 'id', 'name' ],
-    rows: extensions.map((a: any) => [a.sId, a.name])
+    rows: extensions.map((a: any) => [a.name, a.version])
   })
   console.log(table.toString())
 

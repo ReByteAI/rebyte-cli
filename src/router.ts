@@ -1,6 +1,5 @@
 import { initTRPC } from "@trpc/server";
 import { z } from "zod";
-import {TRPCError} from "https://esm.sh/v133/@trpc/server@10.28.2/denonext/server.mjs";
 
 const t = initTRPC.create();
 const router = t.router;
@@ -20,6 +19,31 @@ export const appRouter = router({
   }),
   "callable.getCallables": publicProcedure.query(() => {
     return {}
+  }),
+  "gcp.listFiles": publicProcedure.query(() => {
+    return [
+      {
+        uuid: "uuid",
+        name: "name",
+        mimeType: "",
+        size: 0,
+      }
+    ]
+  }),
+  "gcp.createUploadSignedUrl": publicProcedure.input(
+      z.object({
+        fileName: z.string({
+          required_error: "File name is required",
+        }),
+        fileType: z.string({
+          required_error: "File type is required",
+        }),
+      })
+  ).mutation((input) => {
+    return {
+        uploadUrl: "",
+        downloadUrl: "",
+      }
   }),
   // "post.create": publicProceducre
   //     .input(

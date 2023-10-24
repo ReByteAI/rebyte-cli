@@ -99,6 +99,26 @@ export class RebyteAPI {
     return exts["json"];
   }
 
+  async listFiles() {
+    const exts = await this.trpc["gcp.listFiles"].query();
+    return exts["json"];
+  }
+
+  async createUploadUrl(file: string) {
+    // get ext of file
+    const ext = path.extname(file).slice(1);
+    // get file name
+    const fi = path.basename(file);
+    console.log("ext: ", ext)
+    console.log("fi: ", fi)
+    const exts = await this.trpc["gcp.createUploadSignedUrl"].mutate({
+      fileName: fi,
+      fileType: ext,
+    });
+    console.log("exts: ", exts)
+    return exts["json"];
+  }
+
   async checkValidVersion(rebyte: RebyteJson) {
     const response = await fetch(this.sdkBase + "/ext/check", {
       method: "POST",

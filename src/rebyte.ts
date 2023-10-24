@@ -182,6 +182,35 @@ export async function list_agent() {
   logSuccess("List agent success");
 }
 
+export async function list_file() {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const agents = await client.listFiles()
+  const table = AsciiTable.fromJSON({
+    title: 'Agents',
+    heading: [ 'uuid', 'name'],
+    rows: agents.map((a: any) => [a.uuid, a.name])
+  })
+  console.log(table.toString())
+
+  logSuccess("List agent success");
+}
+
+export async function upload_file(file: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const { uploadUrl, }= await client.createUploadUrl(file)
+  console.log(uploadUrl)
+
+  logSuccess("Upload file success");
+}
+
 export async function import_dir(dir: string, knowledgeName: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {

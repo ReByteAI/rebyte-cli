@@ -3,8 +3,8 @@ import { config, login } from "./config.ts";
 import {
   deploy, import_dir,
   list_agent,
-  list_extension, list_knowledge,
-  newRebyteJson,
+  list_extension, list_file, list_knowledge,
+  newRebyteJson, upload_file,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import {compareVersion} from "./utils.ts";
@@ -74,6 +74,18 @@ cli.command("list-extension", "List all extensions belong to project")
   .action(async () => {
     await list_extension();
   });
+
+cli.command("list-file", "List all agent belong to project")
+    .action(async () => {
+      await list_file();
+    });
+
+cli.command("upload-file", "upload file to rebyte for further processing")
+    .option("-f, --file <file>", "path to upload")
+    .action(async (options) => {
+      const file = options.file;
+      await upload_file(file);
+    });
 
 cli.command("deploy <dir>", "deploy your extension to rebyte")
   .action(async (dir) => {

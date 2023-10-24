@@ -112,9 +112,11 @@ export class RebyteAPI {
     console.log("ext: ", ext)
     console.log("fi: ", fi)
     const exts = await this.trpc["gcp.createUploadSignedUrl"].mutate({
-      fileName: fi,
-      fileType: ext,
-    });
+      input: {
+        fileName: fi,
+        fileType: ext,
+      }
+    })
     console.log("exts: ", exts)
     return exts["json"];
   }

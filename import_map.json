@@ -4,7 +4,8 @@
     "@trpc/server/": "https://esm.sh/v119/@trpc/server@10.28.2/",
     "@trpc/client": "https://esm.sh/v119/@trpc/client@10.28.2",
     "zod": "https://deno.land/x/zod@v3.21.4/mod.ts",
-    "axios": "https://esm.sh/axios"
+    "axios": "https://esm.sh/axios",
+    "superjson": "https://esm.sh/superjson@2.1.0"
   },
   "scopes": {
     "https://ga.jspm.io/": {

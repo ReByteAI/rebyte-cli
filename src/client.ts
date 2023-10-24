@@ -2,6 +2,7 @@ import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import superjson from "superjson";
 import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 
@@ -36,6 +37,7 @@ export class RebyteAPI {
           },
         }),
       ],
+      transformer: superjson,
     });
     this.trpc = client;
   }

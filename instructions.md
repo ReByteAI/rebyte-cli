@@ -78,7 +78,7 @@ This is an example of `rebyte.json` for [call_agent](https://github.com/ReByteAI
 
 ## Create an action extension on project settings page
 
-https://rebyte.ai/p/<project id>/settings/extensions
+https://rebyte.ai/p/`<project id>`/settings/extensions
 
 ```sh
 rebyte create <your project dir>

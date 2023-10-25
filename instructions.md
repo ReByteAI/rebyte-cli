@@ -27,7 +27,7 @@ rebyte login -k <your rebyte api key>
 ```sh
 mkdir -p my-extension
 cd my-extension
-git clone https://github.com/ReByteAI/ext_call_agent/
+git clone https://github.com/ReByteAI/action-extension-template/
 ```
 
 ## Define your action

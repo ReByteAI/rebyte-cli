@@ -44,7 +44,7 @@ export const appRouter = router({
         }),
       }),
     )
-    .mutation((input) => {
+    .mutation((input: {}) => {
       return {
         uploadUrl: "",
         downloadUrl: "",

@@ -27,6 +27,7 @@ export const supportedFileTypes = [
   "txt",
   "rtf",
   "rst",
+  "csv",
   "pdf",
   "json",
   "html",

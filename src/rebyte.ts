@@ -5,10 +5,9 @@ import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
 import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
 
-import AsciiTable, { AsciiAlign } from 'https://deno.land/x/ascii_table/mod.ts';
+import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
 
-
-import { chalk} from "../deps.ts";
+import { chalk } from "../deps.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -32,35 +31,41 @@ export const supportedFileTypes = [
   "json",
   "html",
   "eml",
-]
-
+];
 
 function logSuccess(msg: string) {
   console.log(chalk.green(msg));
 }
 
 const RebyteJson = z.object({
-  name: z.string().min(5).max(30).refine(
-    (value: string) => /^[a-z0-9\_]*$/.test(value),
-    {
+  name: z
+    .string()
+    .min(5)
+    .max(30)
+    .refine((value: string) => /^[a-z0-9\_]*$/.test(value), {
       message: "Only lowercase letters, number and underline are allowed",
-    },
-  ),
-  displayName: z.string().max(
-    30, {
+    }),
+  displayName: z
+    .string()
+    .max(30, {
       message: "displayName must be less than 30 characters",
-      }
-  ).optional().nullable(),
+    })
+    .optional()
+    .nullable(),
   description: z.string().optional().nullable(),
   version: z.string(),
   main: z.string().optional().nullable(),
   out: z.string().optional().nullable(),
-  inputArgs: z.array(z.object({
-    name: z.string(),
-    description: z.string(),
-    type: z.string(),
-    required: z.boolean().optional(),
-  })).optional(),
+  inputArgs: z
+    .array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        type: z.string(),
+        required: z.boolean().optional(),
+      }),
+    )
+    .optional(),
 });
 
 export type RebyteJson = z.infer<typeof RebyteJson>;
@@ -73,7 +78,9 @@ export async function newRebyteJson(dir: string): Promise<RebyteJson> {
 }
 
 function getUploadFileName(rebyte: RebyteJson, pid: string): string {
-  return pid + "-" + rebyte.name + "-" + rebyte.version + "-" + new Date().getTime();
+  return (
+    pid + "-" + rebyte.name + "-" + rebyte.version + "-" + new Date().getTime()
+  );
 }
 
 export async function deploy(dir: string, rebyte: RebyteJson) {
@@ -87,8 +94,8 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   Deno.chdir(dir);
   const entryPoint = path.join(Deno.cwd(), rebyte.main ?? "index.ts");
   const output = path.join(
-      Deno.cwd(),
-      rebyte.out ?? "./dist/" + rebyte.name + ".js",
+    Deno.cwd(),
+    rebyte.out ?? "./dist/" + rebyte.name + ".js",
   );
 
   await esbuild.build({
@@ -102,13 +109,15 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   });
   esbuild.stop();
 
-  console.log("Build success 🎉")
+  console.log("Build success 🎉");
 
   await client.checkValidVersion(rebyte);
 
-  const shouldProceed = confirm(`Are you sure you want to deploy ${rebyte.name} version ${rebyte.version} to ${activeServer.url}?`);
+  const shouldProceed = confirm(
+    `Are you sure you want to deploy ${rebyte.name} version ${rebyte.version} to ${activeServer.url}?`,
+  );
   if (!shouldProceed) {
-    console.log("Deploy canceled")
+    console.log("Deploy canceled");
     return;
   }
 
@@ -117,7 +126,9 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   const uploadURL = await client.getUploadURL(fileId);
   await client.uploadFile(uploadURL, output);
   await client.createExtension(rebyte, fileId);
-  console.log(`Deploy ReByte Extension Success 🎉, you can go to ${activeServer.url}/p/${activeServer.pId}/settings/extensions to check it`);
+  console.log(
+    `Deploy ReByte Extension Success 🎉, you can go to ${activeServer.url}/p/${activeServer.pId}/settings/extensions to check it`,
+  );
 }
 
 export async function list_extension() {
@@ -132,16 +143,16 @@ export async function list_extension() {
   extensions = extensions.reduce((acc: any, cur: any) => {
     acc.push(...cur[1]);
     return acc;
-  }, [])
+  }, []);
 
   // console.log(extensions)
 
   const table = AsciiTable.fromJSON({
-    title: 'Action Extensions',
-    heading: [ 'id', 'name' ],
-    rows: extensions.map((a: any) => [a.name, a.version])
-  })
-  console.log(table.toString())
+    title: "Action Extensions",
+    heading: ["id", "name"],
+    rows: extensions.map((a: any) => [a.name, a.version]),
+  });
+  console.log(table.toString());
 
   logSuccess("List extension success 🎉");
 }
@@ -152,18 +163,17 @@ export async function list_knowledge() {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const agents = await client.listAgents()
+  const agents = await client.listAgents();
 
   const table = AsciiTable.fromJSON({
-    title: 'Title',
-    heading: [ 'id', 'name' ],
-    rows: agents
-  })
-  console.log(table)
+    title: "Title",
+    heading: ["id", "name"],
+    rows: agents,
+  });
+  console.log(table);
 
   logSuccess("List agent success");
 }
-
 
 export async function list_agent() {
   const activeServer = config.activeServer();
@@ -171,13 +181,13 @@ export async function list_agent() {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const agents = await client.listAgents()
+  const agents = await client.listAgents();
   const table = AsciiTable.fromJSON({
-    title: 'Agents',
-    heading: [ 'id', 'name' ],
-    rows: agents.map((a: any) => [a.sId, a.name])
-  })
-  console.log(table.toString())
+    title: "Agents",
+    heading: ["id", "name"],
+    rows: agents.map((a: any) => [a.sId, a.name]),
+  });
+  console.log(table.toString());
 
   logSuccess("List agent success");
 }
@@ -188,13 +198,13 @@ export async function list_file() {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const agents = await client.listFiles()
+  const agents = await client.listFiles();
   const table = AsciiTable.fromJSON({
-    title: 'Agents',
-    heading: [ 'uuid', 'name'],
-    rows: agents.map((a: any) => [a.uuid, a.name])
-  })
-  console.log(table.toString())
+    title: "External Files",
+    heading: ["uuid", "name"],
+    rows: agents.map((a: any) => [a.uuid, a.name]),
+  });
+  console.log(table.toString());
 
   logSuccess("List agent success");
 }
@@ -205,8 +215,8 @@ export async function upload_file(file: string) {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const { uploadUrl, }= await client.createUploadUrl(file)
-  console.log(uploadUrl)
+  const { uploadUrl } = await client.createUploadUrl(file);
+  console.log(uploadUrl);
 
   logSuccess("Upload file success");
 }
@@ -229,14 +239,16 @@ export async function import_dir(dir: string, knowledgeName: string) {
   // console.log(files.map((f) => f.name))
 
   const table = AsciiTable.fromJSON({
-    title: 'Files',
-    heading: [ 'name'],
-    rows: files.map((f) => [f.name])
-  })
+    title: "Files",
+    heading: ["name"],
+    rows: files.map((f) => [f.name]),
+  });
 
-  console.log(table.toString())
+  console.log(table.toString());
 
-  const shouldProceed = confirm(`Found ${files.length} files, Do you want to proceed?`);
+  const shouldProceed = confirm(
+    `Found ${files.length} files, Do you want to proceed?`,
+  );
   if (!shouldProceed) {
     return;
   }
@@ -245,7 +257,7 @@ export async function import_dir(dir: string, knowledgeName: string) {
   const client = new RebyteAPI(activeServer);
   // track progress and log failed files
   for (const file of files) {
-    await client.upsertDoc(knowledgeName, file, dir)
+    await client.upsertDoc(knowledgeName, file, dir);
   }
 
   logSuccess(`Index directory ${dir} success 🎉`);

@@ -6,8 +6,6 @@ import superjson from "superjson";
 import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 
-import axiod from "https://deno.land/x/axiod/mod.ts";
-
 import * as path from "https://deno.land/std/path/mod.ts";
 
 var env = Deno.env.toObject();
@@ -98,12 +96,12 @@ export class RebyteAPI {
 
   async listAgents() {
     const exts = await this.trpc["callable.getCallables"].query();
-    return exts["json"];
+    return exts;
   }
 
   async listFiles() {
     const exts = await this.trpc["gcp.listFiles"].query();
-    return exts["json"];
+    return exts;
   }
 
   async createUploadUrl(file: string) {
@@ -112,10 +110,10 @@ export class RebyteAPI {
     // get file name
     const fi = path.basename(file);
     const exts = await this.trpc["gcp.createUploadSignedUrl"].mutate({
-        fileName: fi,
-        fileType: ext,
-    })
-    console.log("exts: ", exts)
+      fileName: fi,
+      fileType: ext,
+    });
+    console.log("exts: ", exts);
     return exts["json"];
   }
 
@@ -162,9 +160,9 @@ export class RebyteAPI {
   async upsertDoc(
     knowledgeName: string,
     file: DirEntry,
-    baseDir: string
+    baseDir: string,
   ): Promise<string> {
-    console.log("upserting doc: ", file.name)
+    console.log("upserting doc: ", file.name);
     const urlSafeName = encodeURIComponent(knowledgeName);
     const url = `${this.sdkBase}/p/${this.pId}/knowledge/${urlSafeName}/d/${file.name}/upload`;
 
@@ -176,7 +174,7 @@ export class RebyteAPI {
       new Blob([fileContent], {
         type: file.name.endsWith(".pdf") ? "application/pdf" : "text/plain",
       }),
-      file.name
+      file.name,
     );
     form.append("knowledgeName", knowledgeName);
 
@@ -188,7 +186,7 @@ export class RebyteAPI {
           Authorization: `Bearer ${this.key}`,
         },
       });
-      console.log("upserted doc success: ", file.name)
+      console.log("upserted doc success: ", file.name);
       return response.statusText;
     } catch (error) {
       console.log(error);

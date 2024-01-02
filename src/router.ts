@@ -8,17 +8,20 @@ const publicProcedure = t.procedure;
 export const appRouter = router({
   "extension.get": publicProcedure.query(() => {
     return [
-        ["extension1", [
-            {
-                name: "extension1",
-                description: "extension1",
-              version: "1.0.0",
-            }
-        ]],
-    ]
+      [
+        "extension1",
+        [
+          {
+            name: "extension1",
+            description: "extension1",
+            version: "1.0.0",
+          },
+        ],
+      ],
+    ];
   }),
   "callable.getCallables": publicProcedure.query(() => {
-    return {}
+    return [];
   }),
   "gcp.listFiles": publicProcedure.query(() => {
     return [
@@ -27,10 +30,11 @@ export const appRouter = router({
         name: "name",
         mimeType: "",
         size: 0,
-      }
-    ]
+      },
+    ];
   }),
-  "gcp.createUploadSignedUrl": publicProcedure.input(
+  "gcp.createUploadSignedUrl": publicProcedure
+    .input(
       z.object({
         fileName: z.string({
           required_error: "File name is required",
@@ -38,13 +42,14 @@ export const appRouter = router({
         fileType: z.string({
           required_error: "File type is required",
         }),
-      })
-  ).mutation((input) => {
-    return {
+      }),
+    )
+    .mutation((input) => {
+      return {
         uploadUrl: "",
         downloadUrl: "",
-      }
-  }),
+      };
+    }),
   // "post.create": publicProceducre
   //     .input(
   //         z.object({

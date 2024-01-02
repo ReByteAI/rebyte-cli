@@ -1,35 +1,44 @@
 import { cac } from "https://unpkg.com/cac@6.7.14/mod.ts";
 import { config, login } from "./config.ts";
 import {
-  deploy, import_dir,
+  deploy,
+  import_dir,
   list_agent,
-  list_extension, list_file, list_knowledge,
-  newRebyteJson, upload_file,
+  list_extension,
+  list_file,
+  list_knowledge,
+  newRebyteJson,
+  upload_file,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
-import {compareVersion} from "./utils.ts";
+import { compareVersion } from "./utils.ts";
 
 const cli = cac("rebyte");
 
-cli.command("update", "Update rebyte cli to latest version")
-    .action(async () => {
-      // get content https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest
-      // download content
+cli
+  .command("update", "Update rebyte cli to latest version")
+  .action(async () => {
+    // get content https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest
+    // download content
 
-      const response = await
-      fetch("https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest")
-      const latestVersion = JSON.parse(await response.text()).tag_name
-      // remove v from version
-      const latestVersionNumber = latestVersion.substring(1)
-      const currentVersionNumber = version.substring(1)
-      if (compareVersion(currentVersionNumber, latestVersionNumber)) {
-        console.log(`New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`)
-      } else {
-        console.log("You are using latest version")
-      }
-    });
+    const response = await fetch(
+      "https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest",
+    );
+    const latestVersion = JSON.parse(await response.text()).tag_name;
+    // remove v from version
+    const latestVersionNumber = latestVersion.substring(1);
+    const currentVersionNumber = version.substring(1);
+    if (compareVersion(currentVersionNumber, latestVersionNumber)) {
+      console.log(
+        `New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`,
+      );
+    } else {
+      console.log("You are using latest version");
+    }
+  });
 
-cli.command("login", "Login rebyte use your api key")
+cli
+  .command("login", "Login rebyte use your api key")
   .option("-k, --api-key <api-key>", "Your rebyte api key")
   .option(
     "-u, --url <server-url>",
@@ -49,76 +58,86 @@ cli.command("login", "Login rebyte use your api key")
     }
   });
 
-cli.command("get-context", "show current context")
-    .action(async () => {
-      console.log(config)
-    });
+cli.command("get-context", "show current server context").action(async () => {
+  console.log(config);
+});
 
-cli.command("logout", "Logout current project")
-  .action(async () => {
-    // todo(cj): implement logout
-    console.log("logout not implement yet");
-  });
+cli.command("logout", "Logout current project").action(async () => {
+  // todo(cj): implement logout
+  console.log("logout not implement yet");
+});
 
-cli.command("list-agent", "List all agent belong to project")
+cli
+  .command("list-agent", "List all agent belong to project")
   .action(async () => {
     await list_agent();
   });
 
-cli.command("list-knowledge", "List all knowledge belong to project")
-    .action(async () => {
-      await list_knowledge();
-    });
+cli
+  .command("list-knowledge", "List all knowledge belong to project")
+  .action(async () => {
+    await list_knowledge();
+  });
 
-cli.command("list-extension", "List all extensions belong to project")
+cli
+  .command("list-extension", "List all extensions belong to project")
   .action(async () => {
     await list_extension();
   });
 
-cli.command("list-file", "List all agent belong to project")
-    .action(async () => {
-      await list_file();
-    });
+cli
+  .command("list-file", "List all agent belong to project")
+  .action(async () => {
+    await list_file();
+  });
 
-cli.command("upload-file", "upload file to rebyte for further processing")
-    .option("-f, --file <file>", "path to upload")
-    .action(async (options) => {
-      const file = options.file;
-      await upload_file(file);
-    });
+cli
+  .command("upload-file", "upload file to rebyte for further processing")
+  .option("-f, --file <file>", "path to upload")
+  .action(async (options) => {
+    const file = options.file;
+    await upload_file(file);
+  });
 
-cli.command("deploy <dir>", "deploy your extension to rebyte")
+cli
+  .command("deploy <dir>", "deploy your extension to rebyte")
   .action(async (dir) => {
     const rebyte = await newRebyteJson(dir);
     await deploy(dir, rebyte);
-  }).example("rebyte deploy .");
+  })
+  .example("rebyte deploy .");
 
-cli.command("index <dir>", "index files in directory to specific knowledge")
-    .option("-k, --knowledge <knowledge>", "knowledge name")
-    .action(async (dir, options) => {
-      await import_dir(dir, options.knowledge);
-    });
+cli
+  .command("index <dir>", "index files in directory to specific knowledge")
+  .option("-k, --knowledge <knowledge>", "knowledge name")
+  .action(async (dir, options) => {
+    await import_dir(dir, options.knowledge);
+  });
 
 async function update() {
-  const response = await fetch("https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest")
-  const latestVersion = JSON.parse(await response.text()).tag_name
+  const response = await fetch(
+    "https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest",
+  );
+  const latestVersion = JSON.parse(await response.text()).tag_name;
   // remove v from version
-  const latestVersionNumber = latestVersion.substring(1)
-  const currentVersionNumber = version.substring(1)
+  const latestVersionNumber = latestVersion.substring(1);
+  const currentVersionNumber = version.substring(1);
   if (compareVersion(currentVersionNumber, latestVersionNumber)) {
-    console.log(`New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`)
-    return false
+    console.log(
+      `New version ${latestVersion} found, please update to latest version, run: wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -`,
+    );
+    return false;
   } else {
-    console.log("You are using latest version")
-    return true
+    console.log("You are using latest version");
+    return true;
   }
 }
 
-const latest = await update()
+const latest = await update();
 if (!latest) {
-  Deno.exit(1)
+  Deno.exit(1);
 }
-cli.help()
-cli.version(version)
+cli.help();
+cli.version(version);
 cli.outputHelp();
-const parsed = cli.parse()
+const parsed = cli.parse();

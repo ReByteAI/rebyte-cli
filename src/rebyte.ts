@@ -1,13 +1,11 @@
-import * as path from "https://deno.land/std@0.201.0/path/mod.ts";
-import * as esbuild from "https://deno.land/x/esbuild@v0.19.4/mod.js";
-import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.2/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.22.2/mod.ts";
+import * as path from "path";
+import * as esbuild from "esbuild";
+import { denoPlugins } from "esbuild-deno-loader";
+import { z } from "zod";
 import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
-
-import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
-
-import { chalk } from "../deps.ts";
+import AsciiTable, { AsciiAlign } from "asciitable";
+import { chalk } from "./chalk.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 

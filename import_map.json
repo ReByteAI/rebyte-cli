@@ -5,7 +5,14 @@
     "@trpc/client": "https://esm.sh/v119/@trpc/client@10.28.2",
     "zod": "https://deno.land/x/zod@v3.21.4/mod.ts",
     "axios": "https://esm.sh/axios",
-    "superjson": "https://esm.sh/superjson@2.1.0"
+    "superjson": "https://esm.sh/superjson@2.1.0",
+    "cac": "https://unpkg.com/cac@6.7.14/mod.ts",
+    "asciitable": "https://deno.land/x/ascii_table@v0.1.0/mod.ts",
+    "path": "https://deno.land/std@0.201.0/path/mod.ts",
+    "esbuild": "https://deno.land/x/esbuild@v0.19.4/mod.js",
+    "esbuild-deno-loader": "https://deno.land/x/esbuild_deno_loader@0.8.2/mod.ts",
+    "chalk": "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js",
+    "node:os": "https://deno.land/std@0.110.0/node/os.ts"
   },
   "scopes": {
     "https://ga.jspm.io/": {

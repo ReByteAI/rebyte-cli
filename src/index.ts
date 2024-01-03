@@ -1,4 +1,4 @@
-import { cac } from "https://unpkg.com/cac@6.7.14/mod.ts";
+import { cac } from "cac";
 import { config, login } from "./config.ts";
 import {
   deploy,

@@ -1,5 +1,5 @@
 import { RebyteAPI } from "./client.ts";
-import { homedir } from "../deps.ts";
+import { homedir } from "node:os";
 
 const CONFIG_FILE_NAME = "config.json";
 

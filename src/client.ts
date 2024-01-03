@@ -5,8 +5,7 @@ import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
-
-import * as path from "https://deno.land/std/path/mod.ts";
+import * as path from "path";
 
 var env = Deno.env.toObject();
 
@@ -35,6 +34,7 @@ export class RebyteAPI {
           },
         }),
       ],
+      //@ts-ignore: superjson type error
       transformer: superjson,
     });
     this.trpc = client;

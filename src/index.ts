@@ -62,6 +62,26 @@ cli.command("get-context", "show current server context").action(async () => {
   console.log(config);
 });
 
+cli.command("use-context", "use specific server context")
+    .option("-k, --api-key <api-key>", "Your rebyte api key")
+    .action(async (options) => {
+  const key = options.apiKey;
+  // lookup config to find api key match with key
+  // if not found, return error
+
+  const server = config.servers.find((c) => c.api_key === key);
+  if (!server) {
+    console.log("api key not found");
+    return;
+  }
+  const success = await login(key, server.url);
+  if (success) {
+    console.log("Login successfully 🎉");
+  } else {
+    console.log("Login failed, api key is invalidate");
+  }
+});
+
 cli.command("logout", "Logout current project").action(async () => {
   // todo(cj): implement logout
   console.log("logout not implement yet");
@@ -115,6 +135,10 @@ cli
   });
 
 async function update() {
+  const isDev= Deno.env.get("REBYTE_CLI_DEV") === "1";
+  if (isDev) {
+    return true;
+  }
   const response = await fetch(
     "https://api.github.com/repos/ReByteAI/rebyte-cli/releases/latest",
   );
@@ -132,6 +156,8 @@ async function update() {
     return true;
   }
 }
+
+// whether we're running from prod or locally
 
 const latest = await update();
 if (!latest) {

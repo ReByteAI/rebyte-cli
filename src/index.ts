@@ -93,11 +93,11 @@ cli
     await list_agent();
   });
 
-cli
-  .command("list-knowledge", "List all knowledge belong to project")
-  .action(async () => {
-    await list_knowledge();
-  });
+// cli
+//   .command("list-knowledge", "List all knowledge belong to project")
+//   .action(async () => {
+//     await list_knowledge();
+//   });
 
 cli
   .command("list-extension", "List all extensions belong to project")
@@ -128,7 +128,7 @@ cli
   .example("rebyte deploy .");
 
 cli
-  .command("index <dir>", "index files in directory to specific knowledge")
+  .command("index <dir>", "import files in directory to knowledge")
   .option("-k, --knowledge <knowledge>", "knowledge name")
   .action(async (dir, options) => {
     await import_dir(dir, options.knowledge);

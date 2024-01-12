@@ -155,23 +155,23 @@ export async function list_extension() {
   logSuccess("List extension success 🎉");
 }
 
-export async function list_knowledge() {
-  const activeServer = config.activeServer();
-  if (!activeServer) {
-    throw Error("Please login first");
-  }
-  const client = new RebyteAPI(activeServer);
-  const agents = await client.listAgents();
-
-  const table = AsciiTable.fromJSON({
-    title: "Title",
-    heading: ["id", "name"],
-    rows: agents,
-  });
-  console.log(table);
-
-  logSuccess("List agent success");
-}
+// export async function list_knowledge() {
+//   const activeServer = config.activeServer();
+//   if (!activeServer) {
+//     throw Error("Please login first");
+//   }
+//   const client = new RebyteAPI(activeServer);
+//   const agents = await client.listAgents();
+//
+//   const table = AsciiTable.fromJSON({
+//     title: "Title",
+//     heading: ["id", "name"],
+//     rows: agents,
+//   });
+//   console.log(table);
+//
+//   logSuccess("List agent success");
+// }
 
 export async function list_agent() {
   const activeServer = config.activeServer();

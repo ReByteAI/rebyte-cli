@@ -6,6 +6,8 @@ import { RebyteAPI } from "./client.ts";
 import { config } from "./config.ts";
 import AsciiTable, { AsciiAlign } from "asciitable";
 import { chalk } from "./chalk.ts";
+import { ListQuery, displayListQuery } from "./pagination.ts";
+import { formatUnix } from "./utils.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -259,4 +261,39 @@ export async function import_dir(dir: string, knowledgeName: string) {
   }
 
   logSuccess(`Index directory ${dir} success 🎉`);
+}
+
+export async function listMessages(threadId: string, query: ListQuery) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.listMessages(threadId, query);
+  const table = AsciiTable.fromJSON({
+    title: `Messages (thread: ${threadId} ${displayListQuery(query)})`,
+    heading: ["ID", "Created", "Role", "Agent ID", "Name", "Content", "Run ID", "More"],
+    rows: result.list.map((message) => [
+      message.id,
+      formatUnix(message.created_at),
+      message.role,
+      message.assistant_id,
+      message.name,
+      message.content,
+      message.run_id,
+      JSON.stringify({
+        ...message,
+        id: undefined,
+        created_at: undefined,
+        thread_id: undefined,
+        role: undefined,
+        assistant_id: undefined,
+        name: undefined,
+        content: undefined,
+        run_id: undefined,
+      })
+    ]),
+  });
+  console.log(table.toString());
+  logSuccess("List messages success");
 }

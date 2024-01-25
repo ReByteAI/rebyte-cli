@@ -3,10 +3,10 @@ import { config, login } from "./config.ts";
 import {
   deploy,
   import_dir,
+  listMessages,
   list_agent,
   list_extension,
   list_file,
-  list_knowledge,
   newRebyteJson,
   upload_file,
 } from "./rebyte.ts";
@@ -132,6 +132,15 @@ cli
   .option("-k, --knowledge <knowledge>", "knowledge name")
   .action(async (dir, options) => {
     await import_dir(dir, options.knowledge);
+  });
+
+cli
+  .command("messages <thread>", "list messages on thread")
+  .option("-l, --limit <limit>", "limit")
+  .option("-b, --before <before>", "before can be message ID or 'now'")
+  .option("-a, --after <after>", "after can be message ID")
+  .action(async (thread, options) => {
+    await listMessages(thread, {...options, before: options.before || (options.after ? "" : "now")});
   });
 
 async function update() {

@@ -6,6 +6,7 @@ import superjson from "superjson";
 import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 import * as path from "path";
+import { ListQuery, ListResult, listQueryString } from "./pagination.ts";
 
 var env = Deno.env.toObject();
 
@@ -193,4 +194,36 @@ export class RebyteAPI {
       throw Error(`Failed to index file ${file.name}`);
     }
   }
+
+  async listMessages(threadId: string, query: ListQuery) {
+    const url = `${this.sdkBase}/threads/${threadId}/messages?${listQueryString(query)}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}`},
+    });
+    if (response.ok) {
+      return await response.json() as ListResult<MessageType>;
+    } else {
+      throw Error(`Failed to list messages`);
+    }
+  }
+}
+
+export type MessageType = {
+  // The identifier, which can be referenced in API endpoints.
+  id?: string
+  // The Unix timestamp (in seconds) for when the message was created.
+  created_at?: number
+  // The thread ID that this message belongs to.
+  thread_id?: string
+  // The entity that produced the message. Can be user or assistant.
+  role: string
+  // The content of the message
+  content?: any
+  // If applicable, the ID of the agent that authored this message.
+  assistant_id?: string
+  // The display name of the agent that produced this message.
+  name?: string
+  // The ID of the run that produced this message.
+  run_id?: string
 }

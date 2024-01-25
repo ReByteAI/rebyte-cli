@@ -1,3 +1,4 @@
+import moment from "https://deno.land/x/momentjs/mod.ts";
 
 export const VersionRegex = new RegExp("^[0-9]+.[0-9]+.[0-9]+$")
 
@@ -30,4 +31,8 @@ export const compareVersion = (latestVersion: string, newVersion: string) => {
     }
   }
   return true
+}
+
+export function formatUnix(seconds?: number) {
+  return seconds ? moment.unix(seconds).format("YYYY-MM-DD HH:mm:ss") : "";
 }

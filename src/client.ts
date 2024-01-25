@@ -195,6 +195,27 @@ export class RebyteAPI {
     }
   }
 
+  async createMessage(threadId: string, content: string) {
+    const url = `${this.sdkBase}/threads/${threadId}/messages`
+    const message: MessageType = {
+      role: "user",
+      content
+    }
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message)
+    });
+    if (response.ok) {
+      return await response.json() as MessageType;
+    } else {
+      throw Error(`Failed to create message`);
+    }
+  }
+
   async listMessages(threadId: string, query: ListQuery) {
     const url = `${this.sdkBase}/threads/${threadId}/messages?${listQueryString(query)}`
     const response = await fetch(url, {

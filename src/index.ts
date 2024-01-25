@@ -12,6 +12,7 @@ import {
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
+import { createMessage } from "../mod.ts";
 
 const cli = cac("rebyte");
 
@@ -135,12 +136,19 @@ cli
   });
 
 cli
-  .command("messages <thread>", "list messages on thread")
-  .option("-l, --limit <limit>", "limit")
-  .option("-b, --before <before>", "before can be message ID or 'now'")
-  .option("-a, --after <after>", "after can be message ID")
+  .command("messages <thread>", "List messages on thread")
+  .option("-l, --limit <limit>", "Limit")
+  .option("-b, --before <before>", "Can be message ID or 'now'")
+  .option("-a, --after <after>", "Can be message ID")
   .action(async (thread, options) => {
     await listMessages(thread, {...options, before: options.before || (options.after ? "" : "now")});
+  });
+
+cli
+  .command("create-message <thread>", "Create a message on thread")
+  .option("-c, --content <content>", "Message content")
+  .action(async (thread, options) => {
+    await createMessage(thread, options.content);
   });
 
 async function update() {

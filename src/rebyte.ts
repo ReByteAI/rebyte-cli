@@ -8,6 +8,7 @@ import AsciiTable, { AsciiAlign } from "asciitable";
 import { chalk } from "./chalk.ts";
 import { ListQuery, displayListQuery } from "./pagination.ts";
 import { formatUnix } from "./utils.ts";
+import { MessageType } from "../mod.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -263,17 +264,11 @@ export async function import_dir(dir: string, knowledgeName: string) {
   logSuccess(`Index directory ${dir} success 🎉`);
 }
 
-export async function listMessages(threadId: string, query: ListQuery) {
-  const activeServer = config.activeServer();
-  if (!activeServer) {
-    throw Error("Please login first");
-  }
-  const client = new RebyteAPI(activeServer);
-  const result = await client.listMessages(threadId, query);
+function showMessageTable(title: string, messages: MessageType[]) {
   const table = AsciiTable.fromJSON({
-    title: `Messages (thread: ${threadId} ${displayListQuery(query)})`,
+    title,
     heading: ["ID", "Created", "Role", "Agent ID", "Name", "Content", "Run ID", "More"],
-    rows: result.list.map((message) => [
+    rows: messages.map((message) => [
       message.id,
       formatUnix(message.created_at),
       message.role,
@@ -295,5 +290,29 @@ export async function listMessages(threadId: string, query: ListQuery) {
     ]),
   });
   console.log(table.toString());
+}
+
+export async function createMessage(threadId: string, content: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.createMessage(threadId, content);
+  showMessageTable(`Messages (thread: ${threadId})`, [result])
+  logSuccess("Create message success");
+}
+
+export async function listMessages(threadId: string, query: ListQuery) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.listMessages(threadId, query);
+  showMessageTable(
+    `Messages (thread: ${threadId} ${displayListQuery(query)})`,
+    result.list,
+  )
   logSuccess("List messages success");
 }

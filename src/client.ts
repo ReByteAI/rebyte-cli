@@ -7,6 +7,7 @@ import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 import * as path from "path";
 import { ListQuery, ListResult, listQueryString } from "./pagination.ts";
+import { MessageType, ThreadType } from "./types.ts";
 
 var env = Deno.env.toObject();
 
@@ -195,6 +196,23 @@ export class RebyteAPI {
     }
   }
 
+  async createThread() {
+    const url = `${this.sdkBase}/threads`
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({})
+    });
+    if (response.ok) {
+      return await response.json() as ThreadType;
+    } else {
+      throw Error(`Failed to create thread ${JSON.stringify(await response.json())}`);
+    }
+  }
+
   async createMessage(threadId: string, content: string) {
     const url = `${this.sdkBase}/threads/${threadId}/messages`
     const message: MessageType = {
@@ -212,7 +230,7 @@ export class RebyteAPI {
     if (response.ok) {
       return await response.json() as MessageType;
     } else {
-      throw Error(`Failed to create message`);
+      throw Error(`Failed to create message ${JSON.stringify(await response.json())}`);
     }
   }
 
@@ -225,26 +243,7 @@ export class RebyteAPI {
     if (response.ok) {
       return await response.json() as ListResult<MessageType>;
     } else {
-      throw Error(`Failed to list messages`);
+      throw Error(`Failed to list messages ${JSON.stringify(await response.json())}`);
     }
   }
-}
-
-export type MessageType = {
-  // The identifier, which can be referenced in API endpoints.
-  id?: string
-  // The Unix timestamp (in seconds) for when the message was created.
-  created_at?: number
-  // The thread ID that this message belongs to.
-  thread_id?: string
-  // The entity that produced the message. Can be user or assistant.
-  role: string
-  // The content of the message
-  content?: any
-  // If applicable, the ID of the agent that authored this message.
-  assistant_id?: string
-  // The display name of the agent that produced this message.
-  name?: string
-  // The ID of the run that produced this message.
-  run_id?: string
 }

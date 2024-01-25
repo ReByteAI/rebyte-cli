@@ -8,7 +8,7 @@ import AsciiTable, { AsciiAlign } from "asciitable";
 import { chalk } from "./chalk.ts";
 import { ListQuery, displayListQuery } from "./pagination.ts";
 import { formatUnix } from "./utils.ts";
-import { MessageType } from "../mod.ts";
+import { MessageType, ThreadType } from "./types.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -262,6 +262,34 @@ export async function import_dir(dir: string, knowledgeName: string) {
   }
 
   logSuccess(`Index directory ${dir} success 🎉`);
+}
+
+function showThreadTable(title: string, threads: ThreadType[]) {
+  const table = AsciiTable.fromJSON({
+    title,
+    heading: ["ID", "Created", "More"],
+    rows: threads.map((thread) => [
+      thread.id,
+      formatUnix(thread.created_at),
+      JSON.stringify({
+        ...thread,
+        id: undefined,
+        created_at: undefined,
+      })
+    ]),
+  });
+  console.log(table.toString());
+}
+
+export async function createThread() {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.createThread();
+  showThreadTable(`Thread`, [result])
+  logSuccess("Create thread success");
 }
 
 function showMessageTable(title: string, messages: MessageType[]) {

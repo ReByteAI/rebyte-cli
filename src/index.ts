@@ -1,6 +1,8 @@
 import { cac } from "cac";
 import { config, login } from "./config.ts";
 import {
+  createMessage,
+  createThread,
   deploy,
   import_dir,
   listMessages,
@@ -12,7 +14,6 @@ import {
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
-import { createMessage } from "../mod.ts";
 
 const cli = cac("rebyte");
 
@@ -136,19 +137,25 @@ cli
   });
 
 cli
+  .command("create-thread", "Create thread")
+  .action(async () => {
+    await createThread();
+  });
+
+cli
+  .command("create-message <thread>", "Create message on thread")
+  .option("-c, --content <content>", "Message content")
+  .action(async (thread, options) => {
+    await createMessage(thread, options.content);
+  });
+
+cli
   .command("messages <thread>", "List messages on thread")
   .option("-l, --limit <limit>", "Limit")
   .option("-b, --before <before>", "Can be message ID or 'now'")
   .option("-a, --after <after>", "Can be message ID")
   .action(async (thread, options) => {
     await listMessages(thread, {...options, before: options.before || (options.after ? "" : "now")});
-  });
-
-cli
-  .command("create-message <thread>", "Create a message on thread")
-  .option("-c, --content <content>", "Message content")
-  .action(async (thread, options) => {
-    await createMessage(thread, options.content);
   });
 
 async function update() {

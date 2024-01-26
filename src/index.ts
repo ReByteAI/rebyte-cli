@@ -151,11 +151,12 @@ cli
 
 cli
   .command("messages <thread>", "List messages on thread")
-  .option("-l, --limit <limit>", "Limit")
-  .option("-b, --before <before>", "Can be message ID or 'now'")
-  .option("-a, --after <after>", "Can be message ID")
+  .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
+  .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
+  .option("-a, --after <after>", "An object ID that defines your place in the list")
+  .option("-b, --before <before>", "An object ID that defines your place in the list")
   .action(async (thread, options) => {
-    await listMessages(thread, {...options, before: options.before || (options.after ? "" : "now")});
+    await listMessages(thread, options);
   });
 
 async function update() {

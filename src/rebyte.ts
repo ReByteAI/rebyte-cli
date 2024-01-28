@@ -370,3 +370,14 @@ export async function listMessages(threadId: string, query: ListQuery) {
   )
   logSuccess("List messages success");
 }
+
+export async function getMessage(threadId: string, messageId: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.getMessage(threadId, messageId);
+  showMessageTable(`Message (thread: ${threadId})`, [result])
+  logSuccess("Get message success");
+}

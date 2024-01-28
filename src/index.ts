@@ -1,12 +1,14 @@
 import { cac } from "cac";
 import { config, login } from "./config.ts";
 import {
-  createMessage,
   createThread,
+  listThreads,
   getThread,
+  createMessage,
+  listMessages,
+  getMessage,
   deploy,
   import_dir,
-  listMessages,
   list_agent,
   list_extension,
   list_file,
@@ -149,8 +151,8 @@ cli
   .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
   .option("-a, --after <after>", "An object ID that defines your place in the list")
   .option("-b, --before <before>", "An object ID that defines your place in the list")
-  .action(async (thread, options) => {
-    await listMessages(thread, options);
+  .action(async (options) => {
+    await listThreads(options);
   });
 
 cli
@@ -174,6 +176,12 @@ cli
   .option("-b, --before <before>", "An object ID that defines your place in the list")
   .action(async (thread, options) => {
     await listMessages(thread, options);
+  });
+
+cli
+  .command("get-message <thread> <message>", "Get message by ID")
+  .action(async (thread, message) => {
+    await getMessage(thread, message);
   });
 
 async function update() {

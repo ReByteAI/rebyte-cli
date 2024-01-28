@@ -272,4 +272,17 @@ export class RebyteAPI {
       throw Error(`Failed to list messages ${JSON.stringify(await response.json())}`);
     }
   }
+
+  async getMessage(threadId: string, messageId: string) {
+    const url = `${this.sdkBase}//threads/${threadId}/messages/${messageId}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}`},
+    });
+    if (response.ok) {
+      return await response.json() as MessageType;
+    } else {
+      throw Error(`Failed to get message ${JSON.stringify(await response.json())}`);
+    }
+  }
 }

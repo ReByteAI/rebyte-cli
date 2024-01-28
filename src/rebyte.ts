@@ -57,6 +57,10 @@ const RebyteJson = z.object({
   version: z.string(),
   main: z.string().optional().nullable(),
   out: z.string().optional().nullable(),
+  // link to doc
+  docLink: z.string().optional().nullable(),
+  // agent Id
+  exampleAgent: z.string().optional().nullable(),
   inputArgs: z
     .array(
       z.object({

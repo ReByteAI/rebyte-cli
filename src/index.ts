@@ -143,6 +143,16 @@ cli
   });
 
 cli
+  .command("threads", "List threads")
+  .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
+  .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
+  .option("-a, --after <after>", "An object ID that defines your place in the list")
+  .option("-b, --before <before>", "An object ID that defines your place in the list")
+  .action(async (thread, options) => {
+    await listMessages(thread, options);
+  });
+
+cli
   .command("create-message <thread>", "Create message on thread")
   .option("-c, --content <content>", "Message content")
   .action(async (thread, options) => {

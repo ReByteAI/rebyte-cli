@@ -292,6 +292,17 @@ export async function createThread() {
   logSuccess("Create thread success");
 }
 
+export async function listThreads(query: ListQuery) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.listThreads(query);
+  showThreadTable(`Threads (${displayListQuery(query)})`, result.list)
+  logSuccess("List threads success");
+}
+
 function showMessageTable(title: string, messages: MessageType[]) {
   const table = AsciiTable.fromJSON({
     title,

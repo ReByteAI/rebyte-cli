@@ -213,6 +213,19 @@ export class RebyteAPI {
     }
   }
 
+  async listThreads(query: ListQuery) {
+    const url = `${this.sdkBase}/threads?${listQueryString(query)}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}`},
+    });
+    if (response.ok) {
+      return await response.json() as ListResult<ThreadType>;
+    } else {
+      throw Error(`Failed to list threads ${JSON.stringify(await response.json())}`);
+    }
+  }
+
   async createMessage(threadId: string, content: string) {
     const url = `${this.sdkBase}/threads/${threadId}/messages`
     const message: MessageType = {

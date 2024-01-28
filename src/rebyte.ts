@@ -303,6 +303,17 @@ export async function listThreads(query: ListQuery) {
   logSuccess("List threads success");
 }
 
+export async function getThread(threadId: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.getThread(threadId);
+  showThreadTable(`Thread`, [result])
+  logSuccess("Get thread success");
+}
+
 function showMessageTable(title: string, messages: MessageType[]) {
   const table = AsciiTable.fromJSON({
     title,

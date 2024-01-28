@@ -226,6 +226,19 @@ export class RebyteAPI {
     }
   }
 
+  async getThread(threadId: string) {
+    const url = `${this.sdkBase}//threads/${threadId}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}`},
+    });
+    if (response.ok) {
+      return await response.json() as ThreadType;
+    } else {
+      throw Error(`Failed to get thread ${JSON.stringify(await response.json())}`);
+    }
+  }
+
   async createMessage(threadId: string, content: string) {
     const url = `${this.sdkBase}/threads/${threadId}/messages`
     const message: MessageType = {

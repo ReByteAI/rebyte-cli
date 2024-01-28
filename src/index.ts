@@ -3,6 +3,7 @@ import { config, login } from "./config.ts";
 import {
   createMessage,
   createThread,
+  getThread,
   deploy,
   import_dir,
   listMessages,
@@ -150,6 +151,12 @@ cli
   .option("-b, --before <before>", "An object ID that defines your place in the list")
   .action(async (thread, options) => {
     await listMessages(thread, options);
+  });
+
+cli
+  .command("get-thread <thread>", "Get thread")
+  .action(async (thread) => {
+    await getThread(thread);
   });
 
 cli

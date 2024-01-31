@@ -30,3 +30,4 @@ jobs:
             rebyte-linux-x64
             rebyte-macos-x64
             rebyte-macos-arm64
+            rebyte-windows-x64.exe

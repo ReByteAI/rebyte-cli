@@ -10,23 +10,32 @@ Rebyte-cli is a command line tool for **rebyte.ai**. It can help you to manage y
 
 You may install rebyte cli using the following scripts.
 
-<!-- ## On Windows
+> **⚠️ Note:** We use a short link to download install script. If you encounter error when using short link
+> you can try our full link
+replace the short link `https://shorturl.at/cGH23` to `https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh`
+
+### On Windows
 Using PowerShell:
 
+#### Short Command
 ```iwr
-iwr https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh -useb | iex
-``` -->
+iwr https://shorturl.at/cGH23 -useb | iex
+```
+#### Full Command
+```iwr
+iwr https://shorturl.at/cGH23 -useb | iex
+```
 
 ### On POSIX systems
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -
+curl -fsSL https://shorturl.at/cGH23 | sudo sh -
 ```
 
 If you don't have curl installed, you would like to use wget:
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/rebyteai/rebyte-cli/main/install.sh | sudo sh -
+wget -qO- https://shorturl.at/cGH23 | sudo sh -
 ```
 
 <!-- On Alpine Linux

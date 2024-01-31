@@ -16,12 +16,6 @@ replace the short link `https://shorturl.at/cGH23` to `https://raw.githubusercon
 
 ### On Windows
 Using PowerShell:
-
-#### Short Command
-```iwr
-iwr https://shorturl.at/cGH23 -useb | iex
-```
-#### Full Command
 ```iwr
 iwr https://shorturl.at/cGH23 -useb | iex
 ```

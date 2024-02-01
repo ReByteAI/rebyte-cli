@@ -8,7 +8,7 @@ import AsciiTable, { AsciiAlign } from "asciitable";
 import { chalk } from "./chalk.ts";
 import { ListQuery, displayListQuery } from "./pagination.ts";
 import { formatUnix } from "./utils.ts";
-import { MessageType, ThreadType } from "./types.ts";
+import { MessageType, ThreadType, RunType } from "./types.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -402,4 +402,40 @@ export async function updateMessage(threadId: string, messageId: string, metadat
   const result = await client.updateMessage(threadId, messageId, metadata);
   showMessageTable(`Message (thread: ${threadId})`, [result])
   logSuccess("Update message success");
+}
+
+function showRunTable(title: string, runs: RunType[]) {
+  const table = AsciiTable.fromJSON({
+    title,
+    heading: ["ID", "Created", "Agent ID", "Status", "More"],
+    rows: runs.map((run) => [
+      run.id,
+      formatUnix(run.created_at),
+      run.assistant_id,
+      run.status,
+      JSON.stringify({
+        ...run,
+        id: undefined,
+        created_at: undefined,
+        thread_id: undefined,
+        assistant_id: undefined,
+        status: undefined,
+      })
+    ]),
+  });
+  console.log(table.toString());
+}
+
+export async function listRuns(threadId: string, query: ListQuery) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.listRuns(threadId, query);
+  showRunTable(
+    `Runs (thread: ${threadId} ${displayListQuery(query)})`,
+    result.list,
+  )
+  logSuccess("List runs success");
 }

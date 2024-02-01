@@ -9,6 +9,7 @@ import {
   listMessages,
   getMessage,
   updateMessage,
+  listRuns,
   deploy,
   import_dir,
   list_agent,
@@ -200,6 +201,16 @@ cli
   .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
   .action(async (thread, message, options) => {
     await updateMessage(thread, message, options.metadata);
+  });
+
+cli
+  .command("runs <thread>", "List runs on thread")
+  .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
+  .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
+  .option("-a, --after <after>", "An object ID that defines your place in the list")
+  .option("-b, --before <before>", "An object ID that defines your place in the list")
+  .action(async (thread, options) => {
+    await listRuns(thread, options);
   });
 
 async function update() {

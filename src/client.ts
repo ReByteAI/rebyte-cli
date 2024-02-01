@@ -7,7 +7,7 @@ import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 import * as path from "path";
 import { ListQuery, ListResult, listQueryString } from "./pagination.ts";
-import { MessageType, ThreadType } from "./types.ts";
+import { MessageType, RunType, ThreadType } from "./types.ts";
 
 var env = Deno.env.toObject();
 
@@ -324,6 +324,19 @@ export class RebyteAPI {
       return await response.json() as MessageType;
     } else {
       throw Error(`Failed to update message ${JSON.stringify(await response.json())}`);
+    }
+  }
+
+  async listRuns(threadId: string, query: ListQuery) {
+    const url = `${this.sdkBase}/threads/${threadId}/runs?${listQueryString(query)}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}` },
+    });
+    if (response.ok) {
+      return await response.json() as ListResult<RunType>;
+    } else {
+      throw Error(`Failed to list runs ${JSON.stringify(await response.json())}`);
     }
   }
 }

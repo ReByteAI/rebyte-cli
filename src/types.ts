@@ -26,3 +26,16 @@ export type MessageType = {
     run_id?: string
     metadata?: any
 }
+
+export type RunType = {
+    // The identifier, which can be referenced in API endpoints.
+    id: string
+    // The Unix timestamp (in seconds) for when the run was created.
+    created_at: number
+    // The ID of the thread that was executed on.
+    thread_id?: string
+    // The ID of the agent of this run.
+    assistant_id: string
+    version?: number
+    status: string
+}

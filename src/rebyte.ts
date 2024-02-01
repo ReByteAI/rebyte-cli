@@ -447,6 +447,6 @@ export async function getRun(runId: string) {
   }
   const client = new RebyteAPI(activeServer);
   const result = await client.getRun(runId);
-  showRunTable(`Run (thread: ${result.thread_id})`, [result])
+  showRunTable(`Run (thread: ${result.thread_id ?? ""})`, [result])
   logSuccess("Get run success");
 }

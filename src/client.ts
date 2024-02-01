@@ -196,7 +196,7 @@ export class RebyteAPI {
     }
   }
 
-  async createThread() {
+  async createThread(metadata?: string) {
     const url = `${this.sdkBase}/threads`
     const response = await fetch(url, {
       method: "POST",
@@ -204,7 +204,9 @@ export class RebyteAPI {
         Authorization: `Bearer ${this.key}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({
+        metadata: metadata ? JSON.parse(metadata) : undefined
+      })
     });
     if (response.ok) {
       return await response.json() as ThreadType;
@@ -239,11 +241,31 @@ export class RebyteAPI {
     }
   }
 
-  async createMessage(threadId: string, content: string) {
+  async updateThread(threadId: string, metadata?: string) {
+    const url = `${this.sdkBase}//threads/${threadId}`
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        metadata: metadata ? JSON.parse(metadata) : undefined
+      })
+    });
+    if (response.ok) {
+      return await response.json() as ThreadType;
+    } else {
+      throw Error(`Failed to update thread ${JSON.stringify(await response.json())}`);
+    }
+  }
+
+  async createMessage(threadId: string, content: string, metadata?: string) {
     const url = `${this.sdkBase}/threads/${threadId}/messages`
     const message: MessageType = {
       role: "user",
-      content
+      content,
+      metadata: metadata ? JSON.parse(metadata) : undefined
     }
     const response = await fetch(url, {
       method: "POST",
@@ -283,6 +305,25 @@ export class RebyteAPI {
       return await response.json() as MessageType;
     } else {
       throw Error(`Failed to get message ${JSON.stringify(await response.json())}`);
+    }
+  }
+
+  async updateMessage(threadId: string, messageId: string, metadata?: string) {
+    const url = `${this.sdkBase}//threads/${threadId}/messages/${messageId}`
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        metadata: metadata ? JSON.parse(metadata) : undefined
+      })
+    });
+    if (response.ok) {
+      return await response.json() as MessageType;
+    } else {
+      throw Error(`Failed to update message ${JSON.stringify(await response.json())}`);
     }
   }
 }

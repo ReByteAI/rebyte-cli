@@ -285,13 +285,13 @@ function showThreadTable(title: string, threads: ThreadType[]) {
   console.log(table.toString());
 }
 
-export async function createThread() {
+export async function createThread(metadata?: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const result = await client.createThread();
+  const result = await client.createThread(metadata);
   showThreadTable(`Thread`, [result])
   logSuccess("Create thread success");
 }
@@ -316,6 +316,17 @@ export async function getThread(threadId: string) {
   const result = await client.getThread(threadId);
   showThreadTable(`Thread`, [result])
   logSuccess("Get thread success");
+}
+
+export async function updateThread(threadId: string, metadata?: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.updateThread(threadId, metadata);
+  showThreadTable(`Thread`, [result])
+  logSuccess("Update thread success");
 }
 
 function showMessageTable(title: string, messages: MessageType[]) {
@@ -346,13 +357,13 @@ function showMessageTable(title: string, messages: MessageType[]) {
   console.log(table.toString());
 }
 
-export async function createMessage(threadId: string, content: string) {
+export async function createMessage(threadId: string, content: string, metadata?: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const result = await client.createMessage(threadId, content);
+  const result = await client.createMessage(threadId, content, metadata);
   showMessageTable(`Messages (thread: ${threadId})`, [result])
   logSuccess("Create message success");
 }
@@ -380,4 +391,15 @@ export async function getMessage(threadId: string, messageId: string) {
   const result = await client.getMessage(threadId, messageId);
   showMessageTable(`Message (thread: ${threadId})`, [result])
   logSuccess("Get message success");
+}
+
+export async function updateMessage(threadId: string, messageId: string, metadata?: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.updateMessage(threadId, messageId, metadata);
+  showMessageTable(`Message (thread: ${threadId})`, [result])
+  logSuccess("Update message success");
 }

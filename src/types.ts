@@ -24,4 +24,5 @@ export type MessageType = {
     name?: string
     // The ID of the run that produced this message.
     run_id?: string
+    metadata?: any
 }

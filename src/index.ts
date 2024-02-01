@@ -14,9 +14,11 @@ import {
   list_file,
   newRebyteJson,
   upload_file,
+  updateThread,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
+import { updateMessage } from "./rebyte.ts";
 
 const cli = cac("rebyte");
 
@@ -141,8 +143,9 @@ cli
 
 cli
   .command("create-thread", "Create thread")
-  .action(async () => {
-    await createThread();
+  .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
+  .action(async (options) => {
+    await createThread(options.metadata);
   });
 
 cli
@@ -162,10 +165,18 @@ cli
   });
 
 cli
+  .command("update-thread <thread>", "Update thread")
+  .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
+  .action(async (thread, options) => {
+    await updateThread(thread, options.metadata);
+  });
+
+cli
   .command("create-message <thread>", "Create message on thread")
   .option("-c, --content <content>", "Message content")
+  .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
   .action(async (thread, options) => {
-    await createMessage(thread, options.content);
+    await createMessage(thread, options.content, options.metadata);
   });
 
 cli
@@ -182,6 +193,13 @@ cli
   .command("get-message <thread> <message>", "Get message by ID")
   .action(async (thread, message) => {
     await getMessage(thread, message);
+  });
+
+cli
+  .command("update-message <thread> <message>", "Update message by ID")
+  .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
+  .action(async (thread, message, options) => {
+    await updateMessage(thread, message, options.metadata);
   });
 
 async function update() {

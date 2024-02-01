@@ -339,4 +339,17 @@ export class RebyteAPI {
       throw Error(`Failed to list runs ${JSON.stringify(await response.json())}`);
     }
   }
+
+  async getRun(runId: string) {
+    const url = `${this.sdkBase}/runs/${runId}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${this.key}`},
+    });
+    if (response.ok) {
+      return await response.json() as RunType;
+    } else {
+      throw Error(`Failed to get run ${JSON.stringify(await response.json())}`);
+    }
+  }
 }

@@ -10,6 +10,7 @@ import {
   getMessage,
   updateMessage,
   listRuns,
+  getRun,
   deploy,
   import_dir,
   list_agent,
@@ -211,6 +212,12 @@ cli
   .option("-b, --before <before>", "An object ID that defines your place in the list")
   .action(async (thread, options) => {
     await listRuns(thread, options);
+  });
+
+cli
+  .command("get-run <run>", "Get run by ID")
+  .action(async (run) => {
+    await getRun(run);
   });
 
 async function update() {

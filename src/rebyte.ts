@@ -439,3 +439,14 @@ export async function listRuns(threadId: string, query: ListQuery) {
   )
   logSuccess("List runs success");
 }
+
+export async function getRun(runId: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.getRun(runId);
+  showRunTable(`Run (thread: ${result.thread_id})`, [result])
+  logSuccess("Get run success");
+}

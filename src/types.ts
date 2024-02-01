@@ -36,6 +36,5 @@ export type RunType = {
     thread_id?: string
     // The ID of the agent of this run.
     assistant_id: string
-    version?: number
     status: string
 }

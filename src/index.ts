@@ -151,7 +151,7 @@ cli
   });
 
 cli
-  .command("threads", "List threads")
+  .command("list-threads", "List threads")
   .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
   .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
   .option("-a, --after <after>", "An object ID that defines your place in the list")
@@ -161,13 +161,13 @@ cli
   });
 
 cli
-  .command("get-thread <thread>", "Get thread")
+  .command("get-thread <thread>", "Retrieve thread by ID")
   .action(async (thread) => {
     await getThread(thread);
   });
 
 cli
-  .command("update-thread <thread>", "Update thread")
+  .command("update-thread <thread>", "Modify thread by ID")
   .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
   .action(async (thread, options) => {
     await updateThread(thread, options.metadata);
@@ -182,7 +182,7 @@ cli
   });
 
 cli
-  .command("messages <thread>", "List messages on thread")
+  .command("list-messages <thread>", "List messages on thread")
   .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
   .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
   .option("-a, --after <after>", "An object ID that defines your place in the list")
@@ -192,20 +192,20 @@ cli
   });
 
 cli
-  .command("get-message <thread> <message>", "Get message by ID")
+  .command("get-message <thread> <message>", "Retrieve message by ID")
   .action(async (thread, message) => {
     await getMessage(thread, message);
   });
 
 cli
-  .command("update-message <thread> <message>", "Update message by ID")
+  .command("update-message <thread> <message>", "Modify message by ID")
   .option("-m, --metadata <metadata>", "A key-value JSON string of metadata")
   .action(async (thread, message, options) => {
     await updateMessage(thread, message, options.metadata);
   });
 
 cli
-  .command("runs <thread>", "List runs on thread")
+  .command("list-runs <thread>", "List runs on thread")
   .option("-l, --limit <limit>", "A limit on the number of objects. Defaults to 20")
   .option("-o, --order <order>", "asc for ascending order and desc for descending order. Defaults to desc")
   .option("-a, --after <after>", "An object ID that defines your place in the list")
@@ -215,7 +215,7 @@ cli
   });
 
 cli
-  .command("get-run <run>", "Get run by ID")
+  .command("get-run <run>", "Retrieve run by ID")
   .action(async (run) => {
     await getRun(run);
   });

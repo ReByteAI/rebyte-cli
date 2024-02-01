@@ -4,9 +4,11 @@ import {
   createThread,
   listThreads,
   getThread,
+  updateThread,
   createMessage,
   listMessages,
   getMessage,
+  updateMessage,
   deploy,
   import_dir,
   list_agent,
@@ -14,11 +16,9 @@ import {
   list_file,
   newRebyteJson,
   upload_file,
-  updateThread,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
-import { updateMessage } from "./rebyte.ts";
 
 const cli = cac("rebyte");
 

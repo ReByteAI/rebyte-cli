@@ -229,7 +229,7 @@ export class RebyteAPI {
   }
 
   async getThread(threadId: string) {
-    const url = `${this.sdkBase}//threads/${threadId}`
+    const url = `${this.sdkBase}/threads/${threadId}`
     const response = await fetch(url, {
       method: "GET",
       headers: { Authorization: `Bearer ${this.key}`},
@@ -242,7 +242,7 @@ export class RebyteAPI {
   }
 
   async updateThread(threadId: string, metadata?: string) {
-    const url = `${this.sdkBase}//threads/${threadId}`
+    const url = `${this.sdkBase}/threads/${threadId}`
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -296,7 +296,7 @@ export class RebyteAPI {
   }
 
   async getMessage(threadId: string, messageId: string) {
-    const url = `${this.sdkBase}//threads/${threadId}/messages/${messageId}`
+    const url = `${this.sdkBase}/threads/${threadId}/messages/${messageId}`
     const response = await fetch(url, {
       method: "GET",
       headers: { Authorization: `Bearer ${this.key}`},
@@ -309,7 +309,7 @@ export class RebyteAPI {
   }
 
   async updateMessage(threadId: string, messageId: string, metadata?: string) {
-    const url = `${this.sdkBase}//threads/${threadId}/messages/${messageId}`
+    const url = `${this.sdkBase}/threads/${threadId}/messages/${messageId}`
     const response = await fetch(url, {
       method: "POST",
       headers: {

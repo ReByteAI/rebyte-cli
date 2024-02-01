@@ -19,7 +19,7 @@ export type MessageType = {
     // The content of the message
     content?: any
     // If applicable, the ID of the agent that authored this message.
-    assistant_id?: string
+    agent_id?: string
     // The display name of the agent that produced this message.
     name?: string
     // The ID of the run that produced this message.
@@ -35,6 +35,6 @@ export type RunType = {
     // The ID of the thread that was executed on.
     thread_id?: string
     // The ID of the agent of this run.
-    assistant_id: string
+    agent_id: string
     status: string
 }

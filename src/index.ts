@@ -18,6 +18,7 @@ import {
   list_file,
   newRebyteJson,
   upload_file,
+  createKnowledge,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
@@ -158,6 +159,23 @@ cli
   .option("-b, --before <before>", "An object ID that defines your place in the list")
   .action(async (options) => {
     await listThreads(options);
+  });
+
+cli
+  .command("create-knowledge", "Create knowledge")
+  .option("-n, --name <name>", "The name of the knowledge. Must unique in your project")
+  .option("-d, --description <description>", "The description of the knowledge. Description must be less than 255 chars and more than 32 chars")
+  .option("-v, --visibility <visibility>", "The visibility of the knowledge, 'private' or 'public'. Default: private")
+  .option("-e, --embedder <embedder>", "The embedder id, available values is 'openai.text-embedding-ada-002', 'openai.text-embedding-3-small'(team only), 'openai.text-embedding-3-large'(team only), 'voyage.voyage-02'(team only), 'voyage.voyage-lite-02-instruct'(team only), 'voyage.voyage-code-02'(team only), Default: openai.text-embedding-ada-002")
+  .option("-c, --chunkSize <chunkSize>", "The chunk size, must not be greater than embedder max context length, Default: 384")
+  .action(async (options) => {
+    await createKnowledge(
+      options.name,
+      options.description,
+      options.visibility || "private",
+      options.embedder || "openai.text-embedding-ada-002",
+      options.chunkSize || 384
+    )
   });
 
 cli

@@ -38,3 +38,17 @@ export type RunType = {
     agent_id: string
     status: string
 }
+
+export type KnowledgeVisibility = "private" | "public"
+
+export type KnowledgeType = {
+    name: string
+    description?: string
+    visibility: KnowledgeVisibility
+    config?: string
+    runnerProjectId: string
+    lastUpdatedAt?: string
+    // project owner's SId
+    sId: string
+    hub: { id: string; provider: string } | null
+}

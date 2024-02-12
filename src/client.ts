@@ -7,9 +7,7 @@ import { AppRouter } from "./router.ts";
 import DirEntry = Deno.DirEntry;
 import * as path from "path";
 import { ListQuery, ListResult, listQueryString } from "./pagination.ts";
-import { MessageType, RunType, ThreadType } from "./types.ts";
-
-var env = Deno.env.toObject();
+import { KnowledgeType, KnowledgeVisibility, MessageType, RunType, ThreadType } from "./types.ts";
 
 export class RebyteAPI {
   key: string;
@@ -225,6 +223,36 @@ export class RebyteAPI {
       return await response.json() as ListResult<ThreadType>;
     } else {
       throw Error(`Failed to list threads ${JSON.stringify(await response.json())}`);
+    }
+  }
+
+  async createKnowledge(
+    name: string,
+    description: string,
+    visibility: KnowledgeVisibility,
+    embedder: string,
+    chunkSize: number
+  ) {
+    const url = `${this.sdkBase}/p/${this.pId}/knowledge`
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { 
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        visibility,
+        embedder,
+        chunkSize,
+        provider: "files" // Only support create files knowledge through API
+      })
+    });
+    if (response.ok) {
+      return await response.json() as { knowledge: KnowledgeType };
+    } else {
+      throw Error(`Failed to create knowledge ${JSON.stringify(await response.json())}`);
     }
   }
 

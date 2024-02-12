@@ -8,7 +8,7 @@ import AsciiTable, { AsciiAlign } from "asciitable";
 import { chalk } from "./chalk.ts";
 import { ListQuery, displayListQuery } from "./pagination.ts";
 import { formatUnix } from "./utils.ts";
-import { MessageType, ThreadType, RunType } from "./types.ts";
+import { MessageType, ThreadType, RunType, KnowledgeVisibility, KnowledgeType } from "./types.ts";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -307,6 +307,29 @@ export async function listThreads(query: ListQuery) {
   logSuccess("List threads success");
 }
 
+export async function createKnowledge(
+  name: string,
+  description: string,
+  visibility: KnowledgeVisibility,
+  embedder: string,
+  chunkSize: number
+) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.createKnowledge(
+    name,
+    description,
+    visibility,
+    embedder,
+    chunkSize,
+  );
+  showKnowledgeTable(`Knowledge`, result.knowledge)
+  logSuccess("Create knowledge success");
+}
+
 export async function getThread(threadId: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {
@@ -352,6 +375,25 @@ function showMessageTable(title: string, messages: MessageType[]) {
         content: undefined,
         run_id: undefined,
       })
+    ]),
+  });
+  console.log(table.toString());
+}
+
+function showKnowledgeTable(
+  title: string,
+  knowledge: KnowledgeType) 
+{
+  const table = AsciiTable.fromJSON({
+    title,
+    heading: ["Name", "Descriptioin", "Visibility", "SID", "Hub Provider", "Hub ID"],
+    rows: [knowledge].map((k) => [
+      k.name,
+      k.description,
+      k.visibility,
+      k.sId,
+      k.hub?.provider,
+      k.hub?.id,
     ]),
   });
   console.log(table.toString());

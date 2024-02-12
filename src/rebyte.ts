@@ -330,6 +330,27 @@ export async function createKnowledge(
   logSuccess("Create knowledge success");
 }
 
+export async function insertTextToKnowledge(
+  knowledgeName: string,
+  documentId: string,
+  text: string,
+) {
+  if (text.length == 0) {
+    throw Error("Must provide text")
+  }
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const result = await client.insertContentToKnowledge(
+    knowledgeName,
+    documentId,
+    text
+  );
+  logSuccess(`Insert text to knowledge success, Document Size: ${result.textSize}`);
+}
+
 export async function getThread(threadId: string) {
   const activeServer = config.activeServer();
   if (!activeServer) {

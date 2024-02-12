@@ -19,6 +19,7 @@ import {
   newRebyteJson,
   upload_file,
   createKnowledge,
+  insertTextToKnowledge,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
@@ -175,6 +176,18 @@ cli
       options.visibility || "private",
       options.embedder || "openai.text-embedding-ada-002",
       options.chunkSize || 384
+    )
+  });
+cli
+  .command("insert-text", "Insert text to knowledge")
+  .option("-k, --knowledgeName <knowledgeName>", "The name of the knowledge.")
+  .option("-d, --documentId <documentId>", "The documentId in the knowledge of this text. Description unique in your project")
+  .option("-t, --text <text>", "The text content to be inserted")
+  .action(async (options) => {
+    await insertTextToKnowledge(
+      options.knowledgeName,
+      options.documentId,
+      options.text,
     )
   });
 

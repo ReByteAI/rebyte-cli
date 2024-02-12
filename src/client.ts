@@ -256,6 +256,30 @@ export class RebyteAPI {
     }
   }
 
+  async insertContentToKnowledge(
+    knowledgeName: string,
+    documentId: string,
+    text: string,
+  ) {
+    const url = `${this.sdkBase}/p/${this.pId}/knowledge/${knowledgeName}/d`
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { 
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        documentId,
+        text,
+      })
+    });
+    if (response.ok) {
+      return await response.json() as { documentId: string, textSize: number };
+    } else {
+      throw Error(`Failed to insert text  to knowledge ${JSON.stringify(await response.json())}`);
+    }
+  }
+
   async getThread(threadId: string) {
     const url = `${this.sdkBase}/threads/${threadId}`
     const response = await fetch(url, {

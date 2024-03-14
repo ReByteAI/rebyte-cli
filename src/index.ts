@@ -20,9 +20,13 @@ import {
   upload_file,
   createKnowledge,
   insertTextToKnowledge,
+  get_file,
+  delete_file,
+  download_file,
 } from "./rebyte.ts";
 import { version } from "./version.ts";
 import { compareVersion } from "./utils.ts";
+import { assert } from "assert";
 
 const cli = cac("rebyte");
 
@@ -117,17 +121,45 @@ cli
   });
 
 cli
-  .command("list-file", "List all agent belong to project")
+  .command("list-file", "List all files belong to project")
   .action(async () => {
     await list_file();
   });
 
 cli
   .command("upload-file", "upload file to rebyte for further processing")
-  .option("-f, --file <file>", "path to upload")
+  .option("-f, --file <file>", "file path to upload")
   .action(async (options) => {
     const file = options.file;
     await upload_file(file);
+  });
+
+cli
+  .command("get-file", "get file metadata from rebyte")
+  .option("-f, --fileId <fileId>", "file id")
+  .action(async (options) => {
+    const fileId = options.fileId;
+    await get_file(fileId);
+  });
+
+cli
+  .command("download-file", "download file content from rebyte")
+  .option("-o, --output <output>", "output file name to save")
+  .option("-f, --fileId <fileId>", "file id")
+  .action(async (options) => {
+    const fileId = options.fileId;
+    const output = options.output;
+    assert(fileId, "fileId is required");
+    assert(output, "output file name is required");
+    await download_file(fileId, output);
+  });
+
+cli
+  .command("delete-file", "delete file from rebyte")
+  .option("-f, --fileId <fileId>", "file id")
+  .action(async (options) => {
+    const fileId = options.fileId;
+    await delete_file(fileId);
   });
 
 cli

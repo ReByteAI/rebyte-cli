@@ -52,3 +52,12 @@ export type KnowledgeType = {
     sId: string
     hub: { id: string; provider: string } | null
 }
+
+export type ExternalFileType = {
+    name: string
+    size: number
+    mimeType: string
+    uuid: string
+    projectId: number
+    createdAt: Date
+  }

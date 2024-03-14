@@ -9,6 +9,7 @@ import { chalk } from "./chalk.ts";
 import { ListQuery, displayListQuery } from "./pagination.ts";
 import { formatUnix } from "./utils.ts";
 import { MessageType, ThreadType, RunType, KnowledgeVisibility, KnowledgeType } from "./types.ts";
+import { assert } from "assert";
 
 const REBYTE_JSON_FILE = "rebyte.json";
 
@@ -129,7 +130,7 @@ export async function deploy(dir: string, rebyte: RebyteJson) {
   // get upload url
   const fileId = getUploadFileName(rebyte, activeServer.pId);
   const uploadURL = await client.getUploadURL(fileId);
-  await client.uploadFile(uploadURL, output);
+  await client.uploadExtensionFile(uploadURL, output);
   await client.createExtension(rebyte, fileId);
   console.log(
     `Deploy ReByte Extension Success 🎉, you can go to ${activeServer.url}/p/${activeServer.pId}/settings/extensions to check it`,
@@ -211,7 +212,7 @@ export async function list_file() {
   });
   console.log(table.toString());
 
-  logSuccess("List agent success");
+  logSuccess("List files success");
 }
 
 export async function upload_file(file: string) {
@@ -220,10 +221,44 @@ export async function upload_file(file: string) {
     throw Error("Please login first");
   }
   const client = new RebyteAPI(activeServer);
-  const { uploadUrl } = await client.createUploadUrl(file);
-  console.log(uploadUrl);
+  const { fileId } = await client.uploadFile(file);
+  logSuccess("Upload file success, file id: " + fileId);
+}
 
-  logSuccess("Upload file success");
+export async function get_file(fileId: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const file_info = await client.getFileById(fileId);
+  const table = AsciiTable.fromJSON({
+    title: "External Files",
+    heading: ["uuid", "name", "size"],
+    rows: [[file_info.uuid, file_info.name, file_info.size]],
+  });
+  console.log(table.toString());
+}
+
+export async function delete_file(fileId: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const { fileId: fId } = await client.deleteFileById(fileId);
+  assert(fId === fileId, "Delete file failed");
+  console.log("File deleted");
+}
+
+export async function download_file(fileId: string, output: string) {
+  const activeServer = config.activeServer();
+  if (!activeServer) {
+    throw Error("Please login first");
+  }
+  const client = new RebyteAPI(activeServer);
+  const msg = await client.downloadFileById(fileId, output);
+  console.log(msg);
 }
 
 export async function import_dir(dir: string, knowledgeName: string) {

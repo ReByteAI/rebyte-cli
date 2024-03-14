@@ -1,13 +1,14 @@
 import { readableStreamFromReader } from "https://deno.land/std@0.201.0/streams/mod.ts";
+import FormDataV2 from "npm:form-data";
+import { typeByExtension } from "mimetypes";
 import { RebyteJson } from "./rebyte.ts";
 import { RebyteServer } from "./config.ts";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import { AppRouter } from "./router.ts";
-import DirEntry = Deno.DirEntry;
 import * as path from "path";
 import { ListQuery, ListResult, listQueryString } from "./pagination.ts";
-import { KnowledgeType, KnowledgeVisibility, MessageType, RunType, ThreadType } from "./types.ts";
+import { ExternalFileType, KnowledgeType, KnowledgeVisibility, MessageType, RunType, ThreadType } from "./types.ts";
 
 export class RebyteAPI {
   key: string;
@@ -80,7 +81,7 @@ export class RebyteAPI {
     }
   }
 
-  async uploadFile(url: string, filePath: string) {
+  async uploadExtensionFile(url: string, filePath: string) {
     const f = await Deno.open(filePath);
     const response = await fetch(url, {
       method: "PUT",
@@ -100,21 +101,92 @@ export class RebyteAPI {
   }
 
   async listFiles() {
-    const exts = await this.trpc["gcp.listFiles"].query();
-    return exts;
+    const response = await fetch(this.sdkBase + "/files", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.files
+    } else {
+      throw Error(`Failed to list files ${await response.text()} `);
+    }
   }
 
-  async createUploadUrl(file: string) {
-    // get ext of file
-    const ext = path.extname(file).slice(1);
-    // get file name
-    const fi = path.basename(file);
-    const exts = await this.trpc["gcp.createUploadSignedUrl"].mutate({
-      fileName: fi,
-      fileType: ext,
+  async uploadFile(filePath: string) {
+    const decoder = new TextDecoder("utf-8");
+    const f = Deno.readFileSync(filePath);
+    const formData = new FormDataV2();
+    const file_extension = filePath.split(".").pop();
+    let mime_type = "application/octet-stream";
+    if (file_extension && typeByExtension(file_extension)) {
+      mime_type = typeByExtension(file_extension) as string;
+    }
+    formData.append('file', decoder.decode(f), {
+      filename: path.basename(filePath),
+      contentType: mime_type
     });
-    console.log("exts: ", exts);
-    return exts["json"];
+
+    const response = await fetch(this.sdkBase + "/files", {
+      method: "POST",
+      headers: formData.getHeaders({
+        Authorization: `Bearer ${this.key}`,
+      }),
+      body: formData.getBuffer(),
+    });
+    if (!response.ok) {
+      throw Error(`Failed to upload file: ${await response.text()}`);
+    }
+    const file_info = await response.json();
+    return file_info;
+  }
+
+  async getFileById(id: string) {
+    const response = await fetch(this.sdkBase + "/files/" + id, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+      },
+    });
+    if (!response.ok) {
+      throw Error(`Failed to upload file: ${await response.text()}`);
+    }
+    const file_info = await response.json();
+    return file_info.file as ExternalFileType;
+  }
+
+  async downloadFileById(id: string, output: string) {
+    const response = await fetch(this.sdkBase + "/files/" + id + "/content", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+      },
+    });
+    if (!response.ok) {
+      throw Error(`Failed to upload file: ${await response.text()}`);
+    }
+    const file = await Deno.open(output, {write: true, create: true});
+    await file.write(new Uint8Array(await response.arrayBuffer()));
+    return "file saved to " + output;
+  }
+
+  async deleteFileById(id: string) {
+    const response = await fetch(this.sdkBase + "/files/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+      },
+    });
+    if (!response.ok) {
+      throw Error(`Failed to upload file: ${await response.text()}`);
+    }
+    const file_info = await response.json();
+    return file_info;
   }
 
   async checkValidVersion(rebyte: RebyteJson) {
@@ -159,7 +231,7 @@ export class RebyteAPI {
 
   async upsertDoc(
     knowledgeName: string,
-    file: DirEntry,
+    file: Deno.DirEntry,
     baseDir: string,
   ): Promise<string> {
     console.log("upserting doc: ", file.name);

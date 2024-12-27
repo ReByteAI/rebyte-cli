@@ -12,7 +12,6 @@
     "esbuild": "https://deno.land/x/esbuild@v0.19.4/mod.js",
     "esbuild-deno-loader": "https://deno.land/x/esbuild_deno_loader@0.8.2/mod.ts",
     "chalk": "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js",
-    "node:os": "https://deno.land/std@0.110.0/node/os.ts",
     "mimetypes": "https://deno.land/std@0.153.0/media_types/mod.ts",
     "assert": "https://deno.land/std@0.201.0/assert/assert.ts"
   },

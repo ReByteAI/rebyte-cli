@@ -30,7 +30,6 @@ export const supportedFileTypes = [
   "rtf",
   "rst",
   "pdf",
-  "json",
   "html",
   "eml",
 ];
